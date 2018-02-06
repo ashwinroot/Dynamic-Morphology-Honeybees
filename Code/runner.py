@@ -16,6 +16,7 @@ if __name__ =="__main__":
     save_path = "output/" + timestr
 
     def multi_plot(i):
+        tic1 = time.time()
         if not os.path.exists(save_path):
             sys.stdout.write("\n Created the file {}".format(save_path))
             os.makedirs(save_path)
@@ -26,29 +27,45 @@ if __name__ =="__main__":
             x.append(p.x)
             y.append(p.y)
 
-        with open('dump.pkl','a+b') as f:
+        with open(save_path+'/indump.pkl','a+b') as f:
             pickle.dump(particleList,f)
 
         # sys.stdout.write("\r Graph drawing for {}".format(i))
         # sys.stdout.flush()
 
+
         fig = plt.figure()
         plt.title("Plotting "+str(i))
         ax = plt.gca()
-        ax.set_ylim([-1,4])
-        ax.set_xlim([-1,4])
+        # ax.set_ylim([-100,100])
+        # ax.set_xlim([-100,100])
         plt.plot(x,y,'ro')
         fig.savefig(save_path+"/"+str(i)+'.jpg')
+        tic2 = time.time()
+        return (tic2-tic1)
 
     # 9 particles
     #
-    def init_particles(n=9):
-        a= 1.12
+    # def init_particles(n=9):
+    #     a= 2.5
+    #     particleList = []
+    #     for i in range (0,int(math.sqrt(n))): # 1 <= i <= n/2
+    #         for j in range(0,int(math.sqrt(n))):
+    #             noise = random.uniform(-0.5,0.5)
+    #             noise = 0
+    #             particleList.append(Particle(False,a*i+noise,a*j+noise))
+    #     return particleList
+
+    def init(n):
         particleList = []
-        for i in range (0,int(math.sqrt(n))): # 1 <= i <= n/2
-            for j in range(0,int(math.sqrt(n))):
-                noise = random.uniform(-0.2,0.2)
-                particleList.append(Particle(False,a*i+noise,a*j+noise))
+        particles_per_edge = np.ceil(np.sqrt(n))
+        initial_min_step = 1.2 * 1.122
+        initial_l = particles_per_edge * initial_min_step
+        for i in range(0, int(math.sqrt(n))):  # 1 <= i <= n/2
+            for j in range(0, int(math.sqrt(n))):
+                x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
+                y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
+                particleList.append(Particle(False,x,y))
         return particleList
 
 
@@ -59,15 +76,15 @@ if __name__ =="__main__":
             sys.stdout.flush()
         print("\n")
 
-    num_particle = 9
+    num_particle = 100
     time_end = 3000
-    dt = 0
+    print_every = 100
     LJ = LJ() # initializing the LJ utility object
-    particleList =init_particles(num_particle) #list of particles
-    print("Particle list",particleList)
-    #initialising the particles:
+    particleList =init(num_particle) #list of particles
+    # print("Particle list",particleList)
 
-    printStatus()
+
+    time_graph = 0
     start_time = time.time()
     multi_plot(-1)
 
@@ -78,25 +95,19 @@ if __name__ =="__main__":
         sys.stdout.flush()
 
         LJ.set_force(particleList) #initially setting the net force to zero
+
         for i in range (num_particle):
             for j in range(i+1,num_particle):  #inefficient with o(n^3)
                 force = LJ.force_calculate(particleList[i],particleList[j])
-                # sys.stdout.write("\r Iteration {}: {} interacting {} with {}".format(t,i,j,force))
-                # time.sleep(1)
-                # sys.stdout.flush()
-            # LJ.force_wall_calculate(particleList[i],particleList)
+            #LJ.force_wall_calculate(particleList[i],particleList)
+
         for i in range(num_particle):
             particleList[i].motion_equation()
-            #printStatus()
-        # multi_plot(t)
+
+        if t+1%print_every== 0:
+            time_graph = time_graph + multi_plot(t)
 
 
     elapsed_time = time.time() - start_time
-
-
-
-
-
-
-    # FORCE = LJ.force_calculate(A,)
-    # print(FORCE)
+    sys.stdout.write("\n Elapsed time is {:.2f} seconds.".format(elapsed_time))
+    sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(time_graph))

@@ -3,7 +3,8 @@ import random
 import numpy as np
 
 class Particle:
-    def __init__(self,isRan=True,x=0,y=0, num_particle=100):
+    def __init__(self,id,isRan=True,x=0,y=0, num_particle=100):
+        self.id = id
         self.lattice = {"size" :math.sqrt(num_particle)+2.5,"half":num_particle/2}
         if isRan:
             self.x = random.uniform(-self.lattice["size"]/2,self.lattice["size"]/2)
@@ -19,9 +20,5 @@ class Particle:
 
     def motion_equation(self):
         #Equations of motion
-        # self.x = self.x + (self.ux * self.dt) +( 0.5 * self.force[0,0] * (self.dt**2))
-        # self.ux = self.ux + self.force[0,0] * self.dt
-        # self.y = self.y + (self.uy * self.dt) + (0.5 * self.force[0, 1] * (self.dt**2))
-        # self.uy = self.uy + self.force[0, 1] * self.dt
         self.x = self.x + self.dt *self.force[0,0]
         self.y = self.y + self.dt *self.force[0,1]

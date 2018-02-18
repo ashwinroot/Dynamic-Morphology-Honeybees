@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="312a62a9-f6a9-4c46-9bd2-fd5149378d3a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/Cell.py" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/Code/movie/0.tif" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/Code/movie/1.tif" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/Code/movie/10.tif" afterPath="" />
@@ -6006,6 +6005,8 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/Code/nowallforce/998.tif" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/Code/nowallforce/999.tif" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/Cell.py" afterPath="$PROJECT_DIR$/Code/Cell.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/Particle.py" afterPath="$PROJECT_DIR$/Code/Particle.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/runner.py" afterPath="$PROJECT_DIR$/Code/runner.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -6018,7 +6019,7 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Bootstrap___Toy$Particle.coverage" NAME="Particle Coverage Results" MODIFIED="1517869975485" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
     <SUITE FILE_PATH="coverage/Bootstrap___Toy$Test.coverage" NAME="Test Coverage Results" MODIFIED="1516498734179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks/Code" />
-    <SUITE FILE_PATH="coverage/Bootstrap___Toy$Test__1_.coverage" NAME="Test (1) Coverage Results" MODIFIED="1518914573979" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
+    <SUITE FILE_PATH="coverage/Bootstrap___Toy$Test__1_.coverage" NAME="Test (1) Coverage Results" MODIFIED="1518918368640" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
     <SUITE FILE_PATH="coverage/Bootstrap___Toy$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1517182781151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/Bootstrap___Toy$Bootstrap___Toy.coverage" NAME="Bootstrap - Toy Coverage Results" MODIFIED="1518907572260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Bootstrap___Toy$LJ.coverage" NAME="LJ Coverage Results" MODIFIED="1517680799963" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
@@ -6026,11 +6027,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="runner.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="runner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/runner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="59" column="8" lean-forward="false" selection-start-line="59" selection-start-column="8" selection-end-line="59" selection-end-column="8" />
+            <state relative-caret-position="833">
+              <caret line="138" column="51" lean-forward="true" selection-start-line="138" selection-start-column="51" selection-end-line="138" selection-end-column="51" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -6038,11 +6039,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cell.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Particle.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/Particle.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="21" column="28" lean-forward="false" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cell.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/Cell.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state relative-caret-position="330">
+              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -6103,13 +6114,13 @@
         <option value="$PROJECT_DIR$/Code1/LJ.py" />
         <option value="$PROJECT_DIR$/Notebooks/force_explorer.ipynb" />
         <option value="$PROJECT_DIR$/Notebooks/tensorexplorer.ipynb" />
-        <option value="$PROJECT_DIR$/Code/Particle.py" />
         <option value="$PROJECT_DIR$/Code/PointList.py" />
         <option value="$PROJECT_DIR$/Thread_Util.py" />
         <option value="$PROJECT_DIR$/Code/LJ.py" />
         <option value="$PROJECT_DIR$/Code/Thread_Util.py" />
         <option value="$PROJECT_DIR$/Notebooks/multi-threader.ipynb" />
         <option value="$PROJECT_DIR$/Code/output/Cells.py" />
+        <option value="$PROJECT_DIR$/Code/Particle.py" />
         <option value="$PROJECT_DIR$/Code/runner.py" />
         <option value="$PROJECT_DIR$/Code/Cell.py" />
       </list>
@@ -6180,7 +6191,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$2/Languages" value="Python" />
-    <property name="SearchEverywhereHistoryKey" value="LJ&#9;FILE&#9;file:///Users/ashwinsankar/Documents/Independent Study/Code - Python/Bootstrap - Toy/Code/LJ.py&#10;lj&#9;FILE&#9;file:///Users/ashwinsankar/Documents/Independent Study/Code - Python/Bootstrap - Toy/Code/LJ.py" />
+    <property name="SearchEverywhereHistoryKey" value="particl&#9;FILE&#9;file:///Users/ashwinsankar/Documents/Independent Study/Code - Python/Bootstrap - Toy/Code/Particle.py&#10;LJ&#9;FILE&#9;file:///Users/ashwinsankar/Documents/Independent Study/Code - Python/Bootstrap - Toy/Code/LJ.py&#10;lj&#9;FILE&#9;file:///Users/ashwinsankar/Documents/Independent Study/Code - Python/Bootstrap - Toy/Code/LJ.py" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -6329,6 +6340,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="312a62a9-f6a9-4c46-9bd2-fd5149378d3a" name="Default" comment="" />
@@ -6358,7 +6372,14 @@
       <option name="project" value="LOCAL" />
       <updated>1518914475414</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Cell initial commit">
+      <created>1518915135594</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1518915135594</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -6398,7 +6419,8 @@
     <MESSAGE value="Working on formatting code and time lapse and the graph fixed axis" />
     <MESSAGE value="Triangular lattice without potential" />
     <MESSAGE value="With potential" />
-    <option name="LAST_COMMIT_MESSAGE" value="With potential" />
+    <MESSAGE value="Cell initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cell initial commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -6572,14 +6594,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/Particle.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/Cellar/python3/3.6.3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
@@ -6631,22 +6645,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/runner.py">
+    <entry file="file://$PROJECT_DIR$/Code/Particle.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="59" column="8" lean-forward="false" selection-start-line="59" selection-start-column="8" selection-end-line="59" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="437">
+          <caret line="21" column="28" lean-forward="false" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Code/Cell.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state relative-caret-position="330">
+          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/runner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="138" column="51" lean-forward="true" selection-start-line="138" selection-start-column="51" selection-end-line="138" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>

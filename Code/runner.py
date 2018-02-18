@@ -62,14 +62,36 @@ if __name__ =="__main__":
         particles_per_edge = np.ceil(np.sqrt(n))
         initial_min_step = 1.2 * 1.122
         initial_l = particles_per_edge * initial_min_step
+        count =0
         for i in range(0, int(math.sqrt(n))):  # 1 <= i <= n/2
             for j in range(0, int(math.sqrt(n))):
                 x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
                 y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
-                particleList.append(Particle(False,x,y))
+                particleList.append(Particle(count,False,x,y))
+                count+=1
         return particleList
 
+    def init_cells(n):
+        ignore_i = []
+        cellList = []
+        l = np.sqrt(n)
+        distance = 1.22
+        for x in range(n):
+            if((x+1)%l==0):
+                ignore_i.append(x)
+            if(x>=n-l):
+                ignore_i.append(x)
 
+        for x in range(n):
+           if x not in ignore_i:
+             cellList.append(Cell(particleList[x].x,particleList[x].y,particleList[x].x+distance,particleList[x].y+distance,distance))
+        return cellList
+
+    def reoreient(particleList,cellList):
+        for particle in particleList:
+            for cell in cellList:
+                if cell.check_if_present(particle):
+                    cell.add_particle(particle)
 
     def printStatus():
         for count, p in enumerate(particleList):
@@ -82,7 +104,12 @@ if __name__ =="__main__":
     print_every = 100
     LJ = LJ() # initializing the LJ utility object
     particleList =init(num_particle) #list of particles
-    # print("Particle list",particleList)
+    cellList = init_cells(num_particle)
+    reoreient(particleList,cellList)
+    print(len(cellList))
+    for cell in cellList:
+        sys.stdout.write("\n Extending from ({},{}) to ({},{}) and count is {}".format(cell.x1,cell.y1,cell.x2,cell.y2,cell.count))
+
 
 
     time_graph = 0

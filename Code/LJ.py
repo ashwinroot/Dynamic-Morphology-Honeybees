@@ -3,9 +3,9 @@ from Particle import Particle
 
 
 class LJ:
-    def __init__(self):
+    def __init__(self,num_particle):
         self.cutoff = 2.5
-        self.L= 1.2 * 1.122 * np.sqrt(100) #must be using number of particles
+        self.L= 1.2 * 1.122 * np.sqrt(num_particle) #must be using number of particles
 
 
 
@@ -20,9 +20,9 @@ class LJ:
 
             if ~isWall:
                 force_LJ = 24*epsilon*(2*distance**-14 - distance**-8) * r_vector
-                # force_LJ = 24*epsilon*(-28*(distance**-13) +8*(distance**-7) ) *r_vector
                 A.force = A.force - force_LJ
                 B.force = B.force + force_LJ
+                A.potential += np.sum(A.force * r_vector)
             else:
                 if distance > 0:
                     force_LJ = 24  * (-distance ** -8) * r_vector
@@ -44,6 +44,7 @@ class LJ:
     def set_force(self,particleList):
         for x in particleList:
             x.force = np.zeros([1,2])
+            x.potential = 0
 
     def getAdjList(self,distance):
         if distance<self.cutoff:

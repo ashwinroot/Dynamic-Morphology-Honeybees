@@ -1,5 +1,6 @@
-from Particle import Particle
+from Code.Particle import Particle
 from collections import defaultdict
+import sys
 
 class Cell:
     def __init__(self,x1,y1,x2,y2,l):
@@ -23,3 +24,6 @@ class Cell:
             if self.y1 >=A.y and A.y<=self.y2:
                 return True
         return False
+
+    def tostring(self):
+        sys.stdout.write("\n ({},{}) to ({},{}) and has {} particles. ".format(self.x1,self.y1,self.x2,self.y2,self.count))

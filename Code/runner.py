@@ -10,6 +10,7 @@ import pickle
 
 from Particle import Particle
 from LJ import LJ
+from Cell import Cell
 
 if __name__ =="__main__":
     timestr = time.strftime("%YY%mM%dD-%HH%MM%SS")

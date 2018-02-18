@@ -12,7 +12,7 @@ from Particle import Particle
 from LJ import LJ
 
 if __name__ =="__main__":
-    timestr = time.strftime("%Y%m%d-%H%M%S")
+    timestr = time.strftime("%YY%mM%dD-%HH%MM%SS")
     save_path = "output/" + timestr
 
     def multi_plot(i):
@@ -88,6 +88,7 @@ if __name__ =="__main__":
     start_time = time.time()
     multi_plot(-1)
 
+
     for t in range(0,time_end):
 
         #printing the time down
@@ -96,9 +97,11 @@ if __name__ =="__main__":
 
         LJ.set_force(particleList) #initially setting the net force to zero
 
+
         for i in range (num_particle):
             for j in range(i+1,num_particle):  #inefficient with o(n^3)
-                force = LJ.force_calculate(particleList[i],particleList[j])
+                LJ.force_calculate(particleList[i],particleList[j])
+
             #LJ.force_wall_calculate(particleList[i],particleList)
 
         for i in range(num_particle):

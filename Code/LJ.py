@@ -50,7 +50,4 @@ class LJ:
         if distance<self.cutoff:
             return True
         else:
-            False
-
-
-
+            return False

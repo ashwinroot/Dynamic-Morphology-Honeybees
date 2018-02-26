@@ -14,17 +14,6 @@ from Cell import Cell
 from cellutils import CellUtils
 from Grapher import Grapher
 
-# 9 particles
-#
-# def init_particles(n=9):
-#     a= 2.5
-#     particleList = []
-#     for i in range (0,int(math.sqrt(n))): # 1 <= i <= n/2
-#         for j in range(0,int(math.sqrt(n))):
-#             noise = random.uniform(-0.5,0.5)
-#             noise = 0
-#             particleList.append(Particle(False,a*i+noise,a*j+noise))
-#     return particleList
 
 def init(n):
     particleList = []
@@ -42,15 +31,17 @@ def init(n):
 
 def run():
     num_particle = 100
-    time_end = 3000
-    print_every = 100
+    time_end = 1000
+    print_every = 1
     lj = LJ(num_particle) # initializing the LJ utility object
-    cellworker =CellUtils()
-    graph = Grapher()
+    cellworker =CellUtils(distance=2.5)
+    graph = Grapher(distance=2.5)
     particleList =init(num_particle) #list of particles
-    cellList = cellworker.init_cells(particleList,1.5)
-    cellworker.print_cellList(cellList)
+    cellList = cellworker.init_cells(particleList)
+    # cellworker.print_cellList(cellList)
+    cellworker.init_allocation(cellList=cellList,particleList=particleList)
 
+    # cellworker.print_cellList(cellList)
     start_time = time.time()
 
     graph.multi_plot(-1,particleList,cellList)
@@ -61,13 +52,24 @@ def run():
         #printing the time down
         sys.stdout.write("\r Time elapsed : {:.2f} seconds \t Iteration: {}".format(time.time()-start_time,t+1))
         sys.stdout.flush()
-
+        cellworker.init_allocation(cellList=cellList,particleList=particleList)
         lj.set_force(particleList) #initially setting the net force to zero
 
-        for i in range (num_particle):
-            for j in range(i+1,num_particle):  #inefficient with o(n^3)
-                lj.force_calculate(particleList[i],particleList[j])
+        for i,cell in enumerate(cellList):
+            if ~cell.already_interacted:
+                adjacent  = cell.getAdjacentParticles()
+                # sys.stdout.write("\n Cell id : {} Adjacent Particle count: {} ".format(cell.id,len(adjacent)))
+                for particlei in list(cell.particleList.values()):
+                    for particlej in adjacent:
+                        if particlei.id != particlej.id:
+                            # sys.stdout.write("\n \t {} interacting with {}".format(particlei.id, particlej.id))
+                            lj.force_calculate(particlei,particlej)
+                cell.already_interacted = True
 
+        # for i in range (num_particle):
+        #     for j in range(i+1,num_particle):  #inefficient with o(n^3)
+        #         lj.force_calculate(particleList[i],particleList[j])
+        #
         for i in range(num_particle):
             particleList[i].motion_equation()
 
@@ -78,5 +80,6 @@ def run():
     elapsed_time = time.time() - start_time
     sys.stdout.write("\n Elapsed time is {:.2f} seconds.".format(elapsed_time))
     sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(graph.graph_time))
+    graph.multi_plot("Last",particleList,cellList,False)
 
 run()

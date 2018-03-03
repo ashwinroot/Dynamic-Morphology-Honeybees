@@ -8,13 +8,13 @@ import time
 import datetime
 import pickle
 
-from Particle import Particle
-from LJ import LJ
-from Cell import Cell
-from cellutils import CellUtils
-from Grapher import Grapher
+from moduless.Particle import Particle
+from moduless.LJ import LJ
+from moduless.Cell import Cell
+from moduless.cellutils import CellUtils
+from moduless.Grapher import Grapher
 
-class LJ_API:
+class API:
     def init(self,n):
         particleList = []
         particles_per_edge = np.ceil(np.sqrt(n))
@@ -31,12 +31,12 @@ class LJ_API:
 
     def run(self):
         num_particle = 100
-        time_end = 1000
-        print_every = 1
+        time_end = 3000
+        print_every = 100
         lj = LJ(num_particle) # initializing the LJ utility object
         cellworker =CellUtils(distance=2.5)
         graph = Grapher(distance=2.5)
-        particleList =init(num_particle) #list of particles
+        particleList =self.init(num_particle) #list of particles
         cellList = cellworker.init_cells(particleList)
         cellworker.print_cellList(cellList)
         input()
@@ -49,7 +49,7 @@ class LJ_API:
 
 
         for t in range(0,time_end):
-
+            # input("")
             #printing the time down
             sys.stdout.write("\r Time elapsed : {:.2f} seconds \t Iteration: {}".format(time.time()-start_time,t+1))
             sys.stdout.flush()
@@ -57,21 +57,26 @@ class LJ_API:
             lj.set_force(particleList) #initially setting the net force to zero
 
             for i,cell in enumerate(cellList):
-                if not cell.already_interacted:
-                    adjacent  = cell.getAdjacentParticles()
-                    # sys.stdout.write("\n Cell id : {} Adjacent Particle count: {} ".format(cell.id,len(adjacent)))
-                    for particlei in list(cell.particleList.values()):
-                        for particlej in adjacent:
+                adjacent  = cell.getAdjacentParticles()
+                # sys.stdout.write("\n Cell id : {} Adjacent Particle count: {} ".format(cell.id,len(adjacent)))
+                # input("")
+                for particlei in list(cell.particleList.values()):
+                    # print(particlei.interacted)
+                    for particlej in adjacent:
+                        if particlej.id not in particlei.interacted:
                             if particlei.id != particlej.id:
                                 # sys.stdout.write("\n \t {} interacting with {}".format(particlei.id, particlej.id))
                                 lj.force_calculate(particlei,particlej)
-                    cell.already_interacted = True
+                                particlei.interacted.append(particlej.id)
+                                particlej.interacted.append(particlei.id)
+                    # input("")
+
 
 
             # for i in range (num_particle):
             #     for j in range(i+1,num_particle):  #inefficient with o(n^3)
             #         lj.force_calculate(particleList[i],particleList[j])
-            #
+
             for i in range(num_particle):
                 particleList[i].motion_equation()
 

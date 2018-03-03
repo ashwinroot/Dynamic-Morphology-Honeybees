@@ -1,4 +1,4 @@
-from Particle import Particle
+from moduless.Particle import Particle
 from collections import defaultdict
 import sys
 import itertools
@@ -38,6 +38,7 @@ class Cell:
         adjacentParticleList = list(self.particleList.values())
         for x in self.boundary:
             if self.boundary[x] != None:
-                print("Getting values from " + x)
+                # if self.boundary[x].already_interacted == False:
+                    # print("Getting values from " + x)
                 adjacentParticleList = adjacentParticleList+ list(self.boundary[x].particleList.values())
         return adjacentParticleList

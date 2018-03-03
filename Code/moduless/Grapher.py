@@ -49,9 +49,8 @@ class Grapher:
                     (cell.x1, cell.y1),
                     self.distance,
                     self.distance,
-                    fill=False      # remove background
-                )
-                )
+                    fill=False      ))# remove background
+                plt.text(cell.x1-0.02*self.distance,cell.y1+0.02*self.distance,cell.id)
 
         # plt.xlim((b_x1-0.5,b_x2+0.5))
         # plt.ylim((b_y1-0.5,b_y2+0.5))

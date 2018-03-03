@@ -1,5 +1,5 @@
 import numpy as np
-from Particle import Particle
+from moduless.Particle import Particle
 
 
 class LJ:

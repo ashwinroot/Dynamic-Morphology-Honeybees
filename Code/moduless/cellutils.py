@@ -1,5 +1,5 @@
-from Cell import Cell
-from Particle import Particle
+from moduless.Cell import Cell
+from moduless.Particle import Particle
 import numpy as np
 import sys
 
@@ -24,6 +24,7 @@ class CellUtils():
         num_particles = particleList
         cellList = []
         b_x1,b_y1,b_x2,b_y2 = 0,0,0,0
+        sqrt_distance = np.sqrt(2)* distance
         counter = "A"
         #getting the bounds of the system (#ask orit)
         for particle in particleList:
@@ -52,20 +53,20 @@ class CellUtils():
         # initialising the x,y s of cells
         for i in range(self.num_cell):
             for j in range(self.num_cell):
-                cellList.append(Cell(counter,self.bound["x1"]+self.distance*i , self.bound["y1"]+self.distance*j, self.bound["x2"]+self.distance*i,self.bound["y2"]+self.distance*j,self.distance))
+                cellList.append(Cell(counter,self.bound["x1"]+self.distance*i , self.bound["y1"]+self.distance*j, self.bound["x1"]+self.distance*(i+1),self.bound["y1"]+self.distance*(j+1),self.distance))
                 counter = chr(ord(counter)+1) #incrementing ascii
 
         #ADJACENT CELL FILLING
         for i, cell in enumerate(cellList):
             # print(i)
             #find top
-            cell.boundary["RIGHT"] = self.findCell(cellList,cell.x1,cell.y1+distance,cell.x2,cell.y2+ 2*distance)
+            cell.boundary["TOP"] = self.findCell(cellList,cell.x1,cell.y1+distance,cell.x2,cell.y2+ 2*distance)
             #find left
-            cell.boundary["TOP"] = self.findCell(cellList,cell.x1-distance,cell.y1,cell.x2- 2*distance,cell.y2)
+            cell.boundary["LEFT"] = self.findCell(cellList,cell.x1-distance,cell.y1,cell.x1,cell.y2)
             #find right
-            cell.boundary["BOTTOM"] = self.findCell(cellList,cell.x1+2*distance,cell.y1,cell.x2+distance,cell.y2)
+            cell.boundary["BOTTOM"] = self.findCell(cellList,cell.x1,cell.y1-distance,cell.x1+distance,cell.y2)
             #find bottom
-            cell.boundary["LEFT"] = self.findCell(cellList,cell.x1,cell.y1-distance,cell.x2,cell.y2-distance)
+            cell.boundary["RIGHT"] = self.findCell(cellList,cell.x1+distance,cell.y1,cell.x2+distance,cell.y2)
 
         for i,cell in enumerate(cellList):
             if cell.boundary["TOP"] is not None:
@@ -91,12 +92,13 @@ class CellUtils():
     def init_allocation(self,cellList,particleList):
         # print("Reallocating particles")
         for particle in particleList:
+            particle.interacted = list()
             for i,cell in enumerate(cellList):
                 cell.already_interacted = False
-                sys.stdout.write("\n {} : ({},{}) to ({},{})".format(cell.id,cell.x1,cell.y1,cell.x2,cell.y2))
-                input()
-                if particle.x <= cell.x1 and particle.x >= cell.x2:
-                    if particle.y <= cell.y1 and particle.y >= cell.y2:
+                # sys.stdout.write("\n {} : ({},{}) to ({},{})".format(cell.id,cell.x1,cell.y1,cell.x2,cell.y2))
+                # input()
+                if particle.x >= cell.x1 and particle.x <= cell.x2:
+                    if particle.y >= cell.y1 and particle.y <= cell.y2:
                         # print("Alloted particle "+str(particle.id)+" to "+str(cell.id))
                         if particle.cell is not None:
                             original_cell = particle.cell

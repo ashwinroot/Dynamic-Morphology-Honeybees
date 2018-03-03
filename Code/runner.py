@@ -1,9 +1,10 @@
-from modules.LJ_API import LJ_API
+from moduless.LJ_API import API
 
 
 
 def main():
-    LJ_API.run()
+    api = API()
+    api.run()
 
 
 main()

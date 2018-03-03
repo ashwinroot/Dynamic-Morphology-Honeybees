@@ -19,7 +19,6 @@ class Particle:
         self.force = np.zeros([1,2])
         self.potential = 0
         self.cell = None
-        #TODO : displacement
         self.dt = 0.0005
 
     def motion_equation(self):

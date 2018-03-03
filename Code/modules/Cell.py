@@ -10,7 +10,7 @@ class Cell:
         self.x2 = x2
         self.y1 = y1
         self.y2 = y2
-        self.boundary = {"TOP":None,"LEFT":None,"RIGHT":None,"BOTTOM":None}
+        self.boundary = {"TOP":None,"LEFT":None,"RIGHT":None,"BOTTOM":None,"TOPRIGHT":None,"TOPLEFT":None,"BOTTOMRIGHT":None,"BOTTOMLEFT":None}
         self.particleList = defaultdict()
         self.count = 0
         self.l = l
@@ -30,7 +30,7 @@ class Cell:
                 return True
         return False
 
-    def tostring(self):
+    def status(self):
         sys.stdout.write("\n ({},{}) to ({},{}) and has {} particles. ".format(self.x1,self.y1,self.x2,self.y2,self.count))
 
 
@@ -38,5 +38,6 @@ class Cell:
         adjacentParticleList = list(self.particleList.values())
         for x in self.boundary:
             if self.boundary[x] != None:
+                print("Getting values from " + x)
                 adjacentParticleList = adjacentParticleList+ list(self.boundary[x].particleList.values())
         return adjacentParticleList

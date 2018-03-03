@@ -6,15 +6,15 @@ import os
 import pickle
 
 class Grapher:
-    def __init__(self,distance):
+    def __init__(self,distance,iscellList=True):
         self.timestr = time.strftime("%YY%mM%dD-%HH%MM%SS")
         self.save_path = "output/" + self.timestr
         self.graph_time = 0
         self.distance = distance
+        self.iscellList = iscellList
 
 
-    def multi_plot(self,n_iter,particleList,cellList,showPatch=True):
-        distance = 1.5
+    def multi_plot(self,n_iter,particleList,cellList=list(),showPatch=True):
         tic1 = time.time()
         if not os.path.exists(self.save_path):
             sys.stdout.write("\n Created the file {}".format(self.save_path))
@@ -28,8 +28,8 @@ class Grapher:
             a.append(p.potential)
             label.append(p.id)
 
-        with open(self.save_path+'/indump.pkl','a+b') as f:
-            pickle.dump(particleList,f)
+        # with open(self.save_path+'/indump.pkl','a+b') as f:
+        #     pickle.dump(particleList,f)
 
 
         fig = plt.figure()
@@ -42,7 +42,7 @@ class Grapher:
         cbar.set_label("Potential", labelpad=+1)
 
         #grids
-        if showPatch:
+        if showPatch and self.iscellList:
             for cell in cellList:
                 ax.add_patch(
                 patches.Rectangle(

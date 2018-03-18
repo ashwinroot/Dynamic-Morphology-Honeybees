@@ -13,11 +13,13 @@ from moduless.LJ import LJ
 from moduless.Cell import Cell
 from moduless.cellutils import CellUtils
 from moduless.Grapher import Grapher
+from moduless.stress import Stress
 
 class API:
-    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS):
+    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM):
         self.server_params =SERVER_PARAMS
         self.grapher_params = GRAPHER_PARAMS
+        self.stress_params = STRESS_PARAM
 
     def init(self,n):
         particleList = []
@@ -40,6 +42,8 @@ class API:
         distance = self.server_params['distance']
         isCellList = self.server_params['cellList']
 
+
+        stress = Stress(self.stress_params["k"],self.stress_params["rc"],self.stress_params["r0"])
         lj = LJ(num_particle)
         particleList =self.init(num_particle) #list of particles
 
@@ -81,12 +85,14 @@ class API:
                                 if particlei.id != particlej.id:
                                     # sys.stdout.write("\n \t {} interacting with {}".format(particlei.id, particlej.id))
                                     lj.force_calculate(particlei,particlej)
+                                    stress.force_calculate(particlei,particlej)
                                     particlei.interacted.append(particlej.id)
                                     particlej.interacted.append(particlei.id)
             else:
                 for i in range (num_particle):
                     for j in range(i+1,num_particle):  #inefficient with o(n^3)
                         lj.force_calculate(particleList[i],particleList[j])
+                        stress.force_calculate(particleList[i],particleList[j])
 
             for i in range(num_particle):
                 particleList[i].motion_equation()

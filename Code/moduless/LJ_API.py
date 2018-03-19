@@ -43,7 +43,7 @@ class API:
         isCellList = self.server_params['cellList']
 
 
-        stress = Stress(self.stress_params["k"],self.stress_params["rc"],self.stress_params["r0"])
+        stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
         lj = LJ(num_particle)
         particleList =self.init(num_particle) #list of particles
 

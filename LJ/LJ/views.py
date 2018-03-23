@@ -1,7 +1,7 @@
 from LJ import app
 
 from LJ.application import runner
-from flask import render_template,request,Response,redirect, url_for,jsonify
+from flask import render_template,request,Response,redirect, url_for,jsonify , stream_with_context
 import json
 
 
@@ -21,6 +21,7 @@ def get_run():
 
 def stream_template(template_name, **context):
     # http://flask.pocoo.org/docs/patterns/streaming/#streaming-from-templates
+
     app.update_template_context(context)
     t = app.jinja_env.get_template(template_name)
     rv = t.stream(context)
@@ -46,5 +47,5 @@ def run():
     # runner.main(run_params)
     return Response(stream_template("index.html",data = runner.main(run_params)))
 
-        # return app.response_class(response=x,mimetype='application/json')
+    # return Response(stream_with_context(runner.main(run_params)),mimetype='application/json')
     # return redirect('index.html')

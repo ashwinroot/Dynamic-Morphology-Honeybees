@@ -42,8 +42,9 @@ def run():
         "r0": 1.12
 
     }
-    x = runner.main(run_params)
-    return Response(stream_template("index.html",data = runner.main(run_params,mimetype="")))
+    # x = runner.main(run_params)
+    # runner.main(run_params)
+    return Response(stream_template("index.html",data = runner.main(run_params)))
 
         # return app.response_class(response=x,mimetype='application/json')
     # return redirect('index.html')

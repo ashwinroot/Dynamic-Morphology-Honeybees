@@ -14,24 +14,27 @@
 </head>
 
 <body>
-  <div id="data">nothing received yet</div>
+  <div id="plot">Running</div>
 
   <script>
+    var iteration = 0;
   </script>
   {% for d in data: %}
   <script>
     // $("#data").text("{{d}}");
     var str = "{{d}}";
     var res = str.replace(/&#34;/g, "\"");
+    iteration = iteration + 1;
+    console.log("Iteration number : " + iteration);
     var parsed_res = JSON.parse(res)
-    _draw_grpah(parsed_res);
+    _draw_grpah(parsed_res, iteration);
     // $("#data").text(JSON.parse(res));
     // console.log(parsed_res[0]);
 
 
-    function _draw_grpah(parsed_res) {
+    function _draw_grpah(parsed_res, iteration) {
       if (parsed_res) {
-
+        $("#plot").empty();
         // set the dimensions and margins of the graph
         var margin = {
             top: 20,
@@ -55,7 +58,7 @@
         // append the svg obgect to the body of the page
         // appends a 'group' element to 'svg'
         // moves the 'group' element to the top left margin
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#plot").append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
@@ -85,19 +88,49 @@
         //     .attr("d", valueline);
 
         // Add the scatterplot
-        console.log(parsed_res[4]);
-        svg.selectAll("dot")
-          .data(parsed_res)
-          .enter().append("circle")
-          .attr("r", 5)
-          .attr("cx", function(d) {
-            console.log(d);
-            return x(d.x);
-          })
-          .attr("cy", function(d) {
-            return y(d.y);
-          });
+        if (iteration != 0 ) { //TODO: transition 
+          svg.selectAll("circle")
+            .data(parsed_res)
+            .enter().append("circle")
+            .attr("r", 5)
+            .attr("cx", function(d) {
+              //console.log(d);
+              return x(d.x);
+            })
+            .attr("cy", function(d) {
+              return y(d.y);
+            })
+        } else {
+          var scatterSize = 5;
+          console.log("Reached 0 ");
+          d3.selectAll("circle")
+            .data(parsed_res) // Update with new data
+            // .transition()
+            // .duration(1000)
+            .each("start", function() { // Start animation
+              d3.select(this) // 'this' means the current element
+                .attr("fill", "red") // Change color
+                .attr("r", 5); // Change size
+                console.log()
+            })
 
+            // .delay(100)
+            // .attr("fill", "red") // Change color
+            .attr("r", "5") // Change size
+            // .ease(d3.easeBounce)
+            .attr("cx", function(d) {
+              console.log(d);
+              return x(d.x); // Circle's X
+            })
+            .attr("cy", function(d) {
+              return y(d.y); // Circle's Y
+            })
+          // .on("end", function() {
+          //   d3.select(this)
+          //     .attr("fill", "black")
+          //     .attr("r", scatterSize);
+          // });
+        }
         // Add the X Axis
         svg.append("g")
           .attr("transform", "translate(0," + height + ")")
@@ -107,6 +140,15 @@
         svg.append("g")
           .call(d3.axisLeft(y));
 
+        //add Title
+        svg.append("text")
+          .attr("x", (width + margin.left + margin.right) / 2)
+          .attr("y", 15)
+          .attr("class", "title")
+          .attr("text-anchor", "middle")
+          .style("font-size", "16px")
+          .attr("font-weight", "bold")
+          .text("iteration: " + iteration * 100);
 
       }
     }

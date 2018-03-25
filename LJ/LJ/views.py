@@ -15,7 +15,7 @@ def index():
 def get_run():
     if request.method == 'GET':
         content = request.get_json(silent=True)
-        print (content)
+        # print (content)
     return render_template("index.html",response = run())
 
 
@@ -33,13 +33,13 @@ def stream_template(template_name, **context):
 def submit():
     run_params = {
         "time_end" : int(request.form['time_end']),
-        "dt" : 0.005,
+        "dt" : float(request.form['dt']),
         "num_particles":100,
         "distance" :2.5,
         "cellList" : True,
         "print_every" : int(request.form['print_every']),
         "Dimension" :"2d",
-        "k": 0.05,
+        "k": 1,
         "rc" : 1.12 *1.2,
         "r0": 1.12
 

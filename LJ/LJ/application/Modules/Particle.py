@@ -4,7 +4,7 @@ import sys
 import numpy as np
 
 class Particle:
-    def __init__(self,id,isRan=True,x=0,y=0, num_particle=100):
+    def __init__(self,id,isRan=True,x=0,y=0,dt=0.0005, num_particle=100):
         self.id = id
         self.lattice = {"size" :math.sqrt(num_particle)+2.5,"half":num_particle/2}
         if isRan:

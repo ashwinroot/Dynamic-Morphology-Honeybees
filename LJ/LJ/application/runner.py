@@ -8,6 +8,7 @@ def main(runner_params):
         "num_particles":runner_params["num_particles"],
         "distance" :runner_params["distance"],
         "cellList" : runner_params["cellList"],
+        "dt" : runner_params["dt"]
 
     }
     GRAPHER_PARAMS = {

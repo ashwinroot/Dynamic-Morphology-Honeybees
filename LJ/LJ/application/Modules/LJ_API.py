@@ -30,11 +30,12 @@ class API:
         initial_min_step = 1.2 * 1.122
         initial_l = particles_per_edge * initial_min_step
         count =0
+        print("dt" + str(self.server_params['dt']))
         for i in range(0, int(math.sqrt(n))):  # 1 <= i <= n/2
             for j in range(0, int(math.sqrt(n))):
                 x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
                 y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
-                particleList.append(Particle(count,False,x,y))
+                particleList.append(Particle(count,False,x,y,dt=self.server_params['dt']))
                 count+=1
         return particleList
 

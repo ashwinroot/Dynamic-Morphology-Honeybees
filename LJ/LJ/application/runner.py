@@ -26,3 +26,18 @@ def main(runner_params):
     api = API(SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM)
     for i in api.run():
         yield i
+
+
+runner_params = {
+    "time_end" : 3000 ,
+    "dt" : 0.0005 ,
+    "num_particles":100,
+    "distance" :2.5,
+    "cellList" : True,
+    "print_every" : 100,
+    "Dimension" :"2d",
+    "k": 1,
+    "rc" : 1.12 *1.2,
+    "r0": 1.12
+
+}

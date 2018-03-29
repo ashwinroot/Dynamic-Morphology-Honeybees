@@ -3,10 +3,10 @@
 <head>
   <title> Test </title>
   <!-- CSS -->
-  <link rel="stylesheet" href="/static/css/style.css">
-  <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/css/style.css">
   <!-- JS -->
   <script src="/static/js/lib/jquery-3.2.1.min.js"></script>
   <script src="/static/js/lib/d3.min.js"></script>
@@ -16,13 +16,18 @@
 </head>
 
 <body>
-  <div id="plot">Running</div>
+  <div id="left">
+    <div id="plot">Click on run to continue</div>
+  </div>
   <div id="right">
     <form action="/submit" method="POST">
-        <input type="text" class="form-control" rows="5" name="time_end" placeholder="End_time"></input>
-        <input type="text" class="form-control" rows="5" name="print_every" placeholder="print_every" id="print_every"></input>
-        <input type="text" class="form-control" rows="5" name="dt" placeholder="dt" id="dt"></input>
-        <input type="submit" class="btn btn-primary" name="my-form" value="Run">
+      <input type="text" class="form-control" rows="5" name="time_end" placeholder="End_time"></input>
+      <input type="text" class="form-control" rows="5" name="print_every" placeholder="print_every" id="print_every"></input>
+      <input type="text" class="form-control" rows="5" name="dt" placeholder="dt" id="dt"></input>
+      <input type="text" class="form-control" rows="5" name="num_particle" placeholder="num_particle" id="num_particle"></input>
+      <input type="text" class="form-control" rows="5" name="k" placeholder="k(default:0.05)" id="k"></input>
+      <input type="text" class="form-control" rows="5" name="r0" placeholder="r0" id="r0"></input>
+      <input type="submit" class="btn btn-primary" name="my-form" value="Run">
     </form>
   </div>
 
@@ -47,7 +52,7 @@
         $("#plot").empty();
         // set the dimensions and margins of the graph
         var margin = {
-            top: 20,
+            top: 50,
             right: 20,
             bottom: 30,
             left: 50
@@ -124,55 +129,52 @@
                 .attr("r", 5)
                 .attr("cx", function(d) {
                   return x(d.x);
-                    })
-                  .attr("cy", function(d) {
-                    return y(d.y);
+                })
+                .attr("cy", function(d) {
+                  return y(d.y);
 
+                })
+
+            });
+
+
+
+          svg.selectAll("circle")
+            .data(parsed_res)
+            .transition()
+            .duration(500)
+            .delay(function(d, i) {
+              return i / parsed_res.length * 500; // Dynamic delay (i.e. each item delays a little longer)
             })
 
-          });
+            .attr('cx', function(d) {
+              return x(d.x);
+            })
+            .attr('cy', function(d) {
+              return y(d.y);
+            });
+        }
+        // Add the X Axis
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
 
+        // Add the Y Axis
+        svg.append("g")
+          .call(d3.axisLeft(y));
 
+        //add Title
+        svg.append("text")
+          .attr("x", (width + margin.left + margin.right) / 2)
+          .attr("y", 15)
+          .attr("class", "title")
+          .attr("text-anchor", "middle")
+          .style("font-size", "16px")
+          .attr("font-weight", "bold")
+          .text("iteration: " + iteration + "Real world time : " + Math.round(iteration * dt * 100) / 100 + " seconds.");
 
-      svg.selectAll("circle")
-        .data(parsed_res)
-        .transition()
-        .duration(500)
-        .delay(function(d, i) {
-          return i / parsed_res.length * 500; // Dynamic delay (i.e. each item delays a little longer)
-        })
-
-        .attr('cx', function(d) {
-          return x(d.x);
-        })
-        .attr('cy', function(d) {
-          return y(d.y);
-        });
+      }
     }
-    // Add the X Axis
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-    // Add the Y Axis
-    svg.append("g")
-      .call(d3.axisLeft(y));
-
-    //add Title
-    svg.append("text")
-      .attr("x", (width + margin.left + margin.right) / 2)
-      .attr("y", 15)
-      .attr("class", "title")
-      .attr("text-anchor", "middle")
-      .style("font-size", "16px")
-      .attr("font-weight", "bold")
-      .text("iteration: " + iteration + "Real world time : " + Math.round(iteration * dt * 100) / 100  + " seconds.");
-
-    }
-    }
-
-
-
   </script>
   {% endfor %}
 </body>

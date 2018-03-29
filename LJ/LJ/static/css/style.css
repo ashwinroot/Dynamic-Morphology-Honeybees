@@ -3,3 +3,19 @@ body h1 {
   font-family: sans-serif;
   font-size: 30px;
 }
+
+
+
+#left {
+    width: 80%;
+    position: absolute;
+
+
+}
+#right {
+    width: 20%;
+    height: 100%;
+    position: fixed;
+    background: #D3D3D3;
+    right: 0;
+}

@@ -35,7 +35,7 @@ class API:
             for j in range(0, int(math.sqrt(n))):
                 x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
                 y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
-                particleList.append(Particle(count,False,x,y,dt=self.server_params['dt']))
+                particleList.append(Particle(count,False,x,y))
                 count+=1
         return particleList
 

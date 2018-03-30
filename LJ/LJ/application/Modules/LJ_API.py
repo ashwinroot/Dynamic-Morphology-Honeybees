@@ -105,7 +105,7 @@ class API:
             if (t+1) % print_every == 0:
                 d3_dic =list()
                 for particle in particleList:
-                    d3_dic.append({"x":particle.x,"y":particle.y});
+                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential});
                 d = json.dumps(d3_dic)
                 yield d
                 # requests.post("localhost:5000/run", data={'number': 12524, 'type': 'issue', 'action': 'show'})

@@ -1,5 +1,5 @@
 from LJ import app
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

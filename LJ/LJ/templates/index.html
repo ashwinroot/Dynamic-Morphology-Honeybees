@@ -64,7 +64,10 @@
         // set the ranges
         var x = d3.scaleLinear().range([0, width]);
         var y = d3.scaleLinear().range([height, 0]);
-
+        var fooColors = d3.scaleLinear()
+          .domain(d3.extent(parsed_res, function(d) {
+            return d.z;
+          })).range(['#8c510a','#01665e']);
         // define the line
         // var valueline = d3.line()
         //     .x(function(d) { return x(d.date); })
@@ -115,6 +118,9 @@
             .attr("cy", function(d) {
               return y(d.y);
             })
+            .attr("fill", function(d) {
+              return fooColors(d.z);
+            });
         } else {
           var scatterSize = 5;
           console.log("Reached 0 ");
@@ -134,6 +140,9 @@
                   return y(d.y);
 
                 })
+                .attr("fill", function(d) {
+                  return fooColors(d.z);
+                });
 
             });
 

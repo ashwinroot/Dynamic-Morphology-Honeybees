@@ -12,6 +12,7 @@
   <script src="/static/js/lib/d3.min.js"></script>
   <script src="/static/js/script.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.5/d3-legend.js"></script>
 
 </head>
 
@@ -47,27 +48,58 @@
     _draw_graph(parsed_res, iteration);
     // $("#data").text(JSON.parse(res));
     // console.log(parsed_res[0]);
+
+
+    function updateColourScale(colorScale,domain) {
+      var linear = d3.scaleLinear()
+        .domain(domain)
+          .range(['#930F16', '#228B22']);
+
+      var svg = d3.select("svg");
+
+      svg.append("g")
+        .attr("class", "legendLinear")
+        .attr("transform", "translate(980,300)")
+        .text("Potential");
+
+      var legendLinear = d3.legendColor()
+        .shapeWidth(30)
+        .cells(10)
+        .orient('vertical')
+        .scale(linear);
+
+      svg.select(".legendLinear")
+        .call(legendLinear);
+
+    }
+
     function _draw_graph(parsed_res, iteration) {
       if (parsed_res) {
         $("#plot").empty();
         // set the dimensions and margins of the graph
         var margin = {
             top: 50,
-            right: 20,
+            right: 260,
             bottom: 30,
             left: 50
           },
-          width = 960 - margin.left - margin.right,
+          width = 1200 - margin.left - margin.right,
           height = 500 - margin.top - margin.bottom;
 
 
         // set the ranges
         var x = d3.scaleLinear().range([0, width]);
         var y = d3.scaleLinear().range([height, 0]);
-        var fooColors = d3.scaleLinear()
-          .domain(d3.extent(parsed_res, function(d) {
+        var fooColors =
+          d3.scaleLinear()
+          .domain(d3.extent(parsed_res,function(d){
             return d.z;
-          })).range(['#8c510a','#01665e']);
+          }))
+          .range(['#930F16', '#228B22']);
+        // var fooColors = d3.scaleLinear()
+        //   .domain(d3.extent(parsed_res, function(d) {
+        //     return d.z;
+        //   })).range(["#87CEFF", "#0000FF"]);
         // define the line
         // var valueline = d3.line()
         //     .x(function(d) { return x(d.date); })
@@ -119,6 +151,7 @@
               return y(d.y);
             })
             .attr("fill", function(d) {
+              console.log("Potential at " + d.no + ": " + d.z);
               return fooColors(d.z);
             });
         } else {
@@ -141,6 +174,7 @@
 
                 })
                 .attr("fill", function(d) {
+                  console.log("Potential at " + d.no + ": " + d.z);
                   return fooColors(d.z);
                 });
 
@@ -180,8 +214,13 @@
           .attr("text-anchor", "middle")
           .style("font-size", "16px")
           .attr("font-weight", "bold")
-          .text("iteration: " + iteration + "Real world time : " + Math.round(iteration * dt * 100) / 100 + " seconds.");
+          .text("Iteration: " + iteration + " Real world time : " + Math.round(iteration * dt * 100) / 100 + " seconds.");
 
+          var PotentialRange = d3.extent(parsed_res,function(d){
+            return d.z;
+          });
+        //legendSvg
+        updateColourScale(fooColors,PotentialRange);
       }
     }
   </script>

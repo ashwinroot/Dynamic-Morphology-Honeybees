@@ -7,8 +7,7 @@ import time
 import datetime
 import pickle
 import json
-import requests
-from flask_socketio import send, emit
+
 
 from LJ.application.Modules.Particle import Particle
 from LJ.application.Modules.LJ import LJ

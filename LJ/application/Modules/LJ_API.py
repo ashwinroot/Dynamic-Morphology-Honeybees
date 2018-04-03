@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import random
 import math
 import os
@@ -52,7 +51,7 @@ class API:
         lj = LJ(num_particle)
         particleList =self.init(num_particle) #list of particles
 
-        graph = Grapher(distance,isCellList)
+        # graph = Grapher(distance,isCellList)
         if isCellList:
             cellworker = CellUtils(distance)
             cellList = cellworker.init_cells(particleList)

@@ -17,9 +17,9 @@ from LJ.application.Modules.cellutils import CellUtils
 from LJ.application.Modules.stress import Stress
 
 class API:
-    def __init__(self,SERVER_PARAMS,ER_PARAMS,STRESS_PARAM):
+    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM):
         self.server_params =SERVER_PARAMS
-        self.er_params = ER_PARAMS
+        self.grapher_params = GRAPHER_PARAMS
         self.stress_params = STRESS_PARAM
 
     def init(self,n):

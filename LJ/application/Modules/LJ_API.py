@@ -112,17 +112,17 @@ class API:
 
                 #https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
 
-                if isCellList:
-                    graph.multi_plot(t+1,particleList,cellList)
-                else:
-                    graph.multi_plot(t+1,particleList)
+                # if isCellList:
+                #     graph.multi_plot(t+1,particleList,cellList)
+                # else:
+                #     graph.multi_plot(t+1,particleList)
 
 
         elapsed_time = time.time() - start_time
         sys.stdout.write("\n Elapsed time is {:.2f} seconds.".format(elapsed_time))
         sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(graph.graph_time))
-        if (t+1) % print_every == 0:
-            if isCellList:
-                graph.multi_plot("Last",particleList,cellList,False)
-            else:
-                graph.multi_plot("Last",particleList)
+        # if (t+1) % print_every == 0:
+        #     if isCellList:
+        #         graph.multi_plot("Last",particleList,cellList,False)
+        #     else:
+        #         graph.multi_plot("Last",particleList)

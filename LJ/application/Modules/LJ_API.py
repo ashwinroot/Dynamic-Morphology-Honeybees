@@ -13,7 +13,7 @@ from LJ.application.Modules.Particle import Particle
 from LJ.application.Modules.LJ import LJ
 from LJ.application.Modules.Cell import Cell
 from LJ.application.Modules.cellutils import CellUtils
-from LJ.application.Modules.Grapher import Grapher
+# from LJ.application.Modules.Grapher import Grapher
 from LJ.application.Modules.stress import Stress
 
 class API:

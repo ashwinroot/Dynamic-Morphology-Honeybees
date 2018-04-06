@@ -22,12 +22,12 @@
   </div>
   <div id="right">
     <form action="/submit" method="POST">
-      <input type="text" class="form-control" rows="5" name="time_end" placeholder="End_time"></input>
-      <input type="text" class="form-control" rows="5" name="print_every" placeholder="print_every" id="print_every"></input>
-      <input type="text" class="form-control" rows="5" name="dt" placeholder="dt" id="dt"></input>
-      <input type="text" class="form-control" rows="5" name="num_particle" placeholder="num_particle" id="num_particle"></input>
+      <input type="text" class="form-control" rows="5" name="time_end" placeholder="N_Iteration(default:3000)"></input>
+      <input type="text" class="form-control" rows="5" name="print_every" placeholder="print_every" id="print_every(default:100)"></input>
+      <input type="text" class="form-control" rows="5" name="dt" placeholder="dt" id="dt(default:0.005)"></input>
+      <input type="text" class="form-control" rows="5" name="num_particle" placeholder="num_particle(default:100)" id="num_particle"></input>
       <input type="text" class="form-control" rows="5" name="k" placeholder="k(default:0.05)" id="k"></input>
-      <input type="text" class="form-control" rows="5" name="r0" placeholder="r0" id="r0"></input>
+      <input type="text" class="form-control" rows="5" name="r0" placeholder="r0(default:1.12)" id="r0"></input>
       <input type="submit" class="btn btn-primary" name="my-form" value="Run">
     </form>
   </div>
@@ -224,7 +224,7 @@
         svg.append("g")
           .call(d3.axisLeft(y));
 
-    
+
         //add Title
         svg.append("text")
           .attr("x", (width + margin.left + margin.right) / 2)

@@ -118,7 +118,7 @@ class API:
 
         elapsed_time = time.time() - start_time
         sys.stdout.write("\n Elapsed time is {:.2f} seconds.".format(elapsed_time))
-        sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(graph.graph_time))
+        # sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(graph.graph_time))
         # if (t+1) % print_every == 0:
         #     if isCellList:
         #         graph.multi_plot("Last",particleList,cellList,False)

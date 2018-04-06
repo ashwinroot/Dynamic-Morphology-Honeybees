@@ -50,30 +50,40 @@
     // console.log(parsed_res[0]);
 
 
+
+
     function updateColourScale(colorScale,domain) {
-      var linear = d3.scaleLinear()
-        .domain(domain)
-          .range(['#930F16', '#228B22']);
+      // var linear = d3.scaleLinear()
+      //   .domain(domain)
+      //     .range(colorScale);
 
       var svg = d3.select("svg");
 
+      var legend = d3.legendColor()
+        .labelFormat(d3.format(".2f"))
+        // .useClass(true)
+        .title("Potential of every particle")
+        .titleWidth(100)
+        .scale(colorScale);
+
       svg.append("g")
         .attr("class", "legendLinear")
-        .attr("transform", "translate(980,300)")
-        .text("Potential");
+        .attr("transform", "translate(980,300)");
 
-      var legendLinear = d3.legendColor()
-        .shapeWidth(30)
-        .cells(10)
-        .orient('vertical')
-        .scale(linear);
+      // var legendLinear = d3.legendColor()
+      //   .shapeWidth(30)
+      //   .cells(10)
+      //   .orient('vertical')
+      //   .scale(color);
 
       svg.select(".legendLinear")
-        .call(legendLinear);
+        .call(legend);
 
     }
 
     function _draw_graph(parsed_res, iteration) {
+
+      colors1 = ["#f4c8c8","#eda3a3","#e47373","#e05d5d", "#dc4848","#d83333"]
       if (parsed_res) {
         $("#plot").empty();
         // set the dimensions and margins of the graph
@@ -90,12 +100,11 @@
         // set the ranges
         var x = d3.scaleLinear().range([0, width]);
         var y = d3.scaleLinear().range([height, 0]);
-        var fooColors =
-          d3.scaleLinear()
+        var fooColors =d3.scaleQuantile()
           .domain(d3.extent(parsed_res,function(d){
             return d.z;
           }))
-          .range(['#930F16', '#228B22']);
+          .range(colors1);
         // var fooColors = d3.scaleLinear()
         //   .domain(d3.extent(parsed_res, function(d) {
         //     return d.z;
@@ -130,6 +139,15 @@
         y.domain(d3.extent(parsed_res, function(d) {
           return d.y;
         }));
+
+        var xExtent = d3.extent(parsed_res, function(d) { return d.x; }),
+        xRange = xExtent[1] - xExtent[0],
+        yExtent = d3.extent(parsed_res, function(d) { return d.y; }),
+        yRange = yExtent[1] - yExtent[0];
+
+        // set domain to be extent +- 5%
+        x.domain([xExtent[0] - (xRange * .05), xExtent[1] + (xRange * .05)]);
+        y.domain([yExtent[0] - (yRange * .05), yExtent[1] + (yRange * .05)]);
 
         // Add the valueline path.
         // svg.append("path")
@@ -206,6 +224,7 @@
         svg.append("g")
           .call(d3.axisLeft(y));
 
+    
         //add Title
         svg.append("text")
           .attr("x", (width + margin.left + margin.right) / 2)

@@ -29,3 +29,6 @@ class Particle:
 
     def status(self):
         sys.stdout.write("\n Particle : {} ({},{}), Force: [{},{}]".format(self.id,self.x,self.y,self.force[0,0],self.force[0,1]))
+
+    def _move(self, distance = 0.5):
+        self.x+=distance

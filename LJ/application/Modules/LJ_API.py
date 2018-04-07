@@ -7,13 +7,14 @@ import time
 import datetime
 import pickle
 import json
+import matplotlib.pyplot as plt
 
 
 from LJ.application.Modules.Particle import Particle
 from LJ.application.Modules.LJ import LJ
 from LJ.application.Modules.Cell import Cell
 from LJ.application.Modules.cellutils import CellUtils
-# from LJ.application.Modules.Grapher import Grapher
+from LJ.application.Modules.Grapher import Grapher
 from LJ.application.Modules.stress import Stress
 
 class API:
@@ -37,6 +38,16 @@ class API:
                 count+=1
         return particleList
 
+    def set_toggle(self,toggle_move,toggle_direction):
+        if toggle_move == 1:
+            return 0,toggle_direction
+        if toggle_move == -1:
+            return 0,toggle_direction
+        if toggle_move == 0 and toggle_direction:
+            return 1,not toggle_direction
+        if toggle_move == 0 and not toggle_direction:
+            return -1,not toggle_direction
+
     def run(self):
         num_particle = self.server_params['num_particles']
         time_end = self.server_params['time_end']
@@ -44,27 +55,32 @@ class API:
         distance = self.server_params['distance']
         isCellList = self.server_params['cellList']
 
+        move_every = 100
+        toggle_variable = [-1,0,1]
+        toggle_move = 0
+        toggle_direction = True
 
 
         stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
         lj = LJ(num_particle)
         particleList =self.init(num_particle) #list of particles
 
-        # graph = Grapher(distance,isCellList)
+        graph = Grapher(distance,isCellList)
         if isCellList:
             cellworker = CellUtils(distance)
             cellList = cellworker.init_cells(particleList)
             cellworker.print_cellList(cellList)
+            cellworker.findTopLine(particleList)
             # input()
             cellworker.init_allocation(cellList=cellList,particleList=particleList)
 
         # cellworker.print_cellList(cellList)
         start_time = time.time()
 
-        # if isCellList:
-        #     graph.multi_plot(-1,particleList,cellList)
-        # else:
-        #     graph.multi_plot(-1,particleList)
+        if isCellList:
+            graph.multi_plot(-1,particleList,cellList)
+        else:
+            graph.multi_plot(-1,particleList)
 
 
         for t in range(0,time_end):
@@ -100,7 +116,19 @@ class API:
             for i in range(num_particle):
                 particleList[i].motion_equation()
 
-            if (t+1) % print_every == 0:
+
+            if (t+1) % move_every == 0:
+                # print("Toggle_move : {} toggle_direction : {} move: 1".format(toggle_move,toggle_direction))
+                for x in cellworker.topLine:
+                    if toggle_direction:
+                        print("Toggle_move : {} toggle_direction : {} move: 1".format(toggle_move,toggle_direction))
+                        particleList[x]._move(1)
+                    else:
+                        print("Toggle_move : {} toggle_direction : {} move: -1".format(toggle_move,toggle_direction))
+                        particleList[x]._move(-1)
+                toggle_move,toggle_direction = self.set_toggle(toggle_move,toggle_direction)
+
+            if (t+1) % print_every == 0 or t==0:
                 d3_dic =list()
                 for particle in particleList:
                     d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential});
@@ -110,15 +138,15 @@ class API:
 
                 #https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
 
-                # if isCellList:
-                #     graph.multi_plot(t+1,particleList,cellList)
-                # else:
-                #     graph.multi_plot(t+1,particleList)
+                if isCellList:
+                    graph.multi_plot(t+1,particleList,cellList)
+                else:
+                    graph.multi_plot(t+1,particleList)
 
 
         elapsed_time = time.time() - start_time
         sys.stdout.write("\n Elapsed time is {:.2f} seconds.".format(elapsed_time))
-        # sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(graph.graph_time))
+        sys.stdout.write("\n Time taken to create graphs is {:.2f} seconds.".format(graph.graph_time))
         # if (t+1) % print_every == 0:
         #     if isCellList:
         #         graph.multi_plot("Last",particleList,cellList,False)

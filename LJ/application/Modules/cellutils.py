@@ -18,6 +18,12 @@ class CellUtils():
                 return cell
         return None
 
+    def findTopLine(self,particleList):
+        self.topLine = list()
+        for particle in particleList:
+            if particle.y == self.top_y:
+                self.topLine.append(particle.id)
+
     def init_cells(self,particleList,distance=1.5):
         distance = self.distance
         print("\n Initialising cells")
@@ -42,6 +48,8 @@ class CellUtils():
         self.bound["x2"] = b_x2 + 0.09
         self.bound["y1"] = b_y1 - 0.09
         self.bound["y2"] = b_y2 + 0.09
+
+        self.top_y = b_y2
 
 
         print("\n Boundaries are "+ str(self.bound["x1"]) +str(self.bound["y1"]) +str(self.bound["x2"])   +  str(self.bound["y2"]))

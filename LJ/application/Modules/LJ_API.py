@@ -18,10 +18,11 @@ from LJ.application.Modules.Grapher import Grapher
 from LJ.application.Modules.stress import Stress
 
 class API:
-    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM):
+    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS):
         self.server_params =SERVER_PARAMS
         self.grapher_params = GRAPHER_PARAMS
         self.stress_params = STRESS_PARAM
+        self.displacement_params = DISPLACEMENT_PARAMS
 
     def init(self,n):
         particleList = []
@@ -37,6 +38,19 @@ class API:
                 particleList.append(Particle(count,False,x,y))
                 count+=1
         return particleList
+
+    def send_details(self,iteration,particleList,cellworker):
+        if (iteration+1)>= self.move_after:
+            if (iteration+1) % self.move_every == 0:
+                # print("Toggle_move : {} toggle_direction : {} move: 1".format(toggle_move,toggle_direction))
+                for x in cellworker.topLine:
+                    if toggle_direction:
+                        print("Toggle_move : {} toggle_direction : {} move: 1".format(self.toggle_move,self.toggle_direction))
+                        particleList[x]._move(self.displacement)
+                    else:
+                        print("Toggle_move : {} toggle_direction : {} move: -1".format(self.toggle_move,self.toggle_direction))
+                        particleList[x]._move(-self.displacement)
+                self.toggle_move,self.toggle_direction = self.set_toggle(self.toggle_move,self.toggle_direction)
 
     def set_toggle(self,toggle_move,toggle_direction):
         if toggle_move == 1:
@@ -54,11 +68,14 @@ class API:
         print_every = self.grapher_params['print_every']
         distance = self.server_params['distance']
         isCellList = self.server_params['cellList']
+        is_graph = self.grapher_params["is_graph"]
 
-        move_every = 0
-        toggle_variable = [-1,0,1]
-        toggle_move = 0
-        toggle_direction = True
+        #displacement params
+        self.move_every = self.displacement_params["move_every"]
+        self.toggle_move = 0
+        self.toggle_direction = True
+        self.displacement = self.displacement_params["displacement"]
+        self.move_after = self.displacement_params["move_after"]
 
 
         stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
@@ -77,10 +94,11 @@ class API:
         # cellworker.print_cellList(cellList)
         start_time = time.time()
 
-        if isCellList:
-            graph.multi_plot(-1,particleList,cellList)
-        else:
-            graph.multi_plot(-1,particleList)
+        if is_graph:
+            if isCellList:
+                graph.multi_plot(-1,particleList,cellList)
+            else:
+                graph.multi_plot(-1,particleList)
 
 
         for t in range(0,time_end):
@@ -114,34 +132,26 @@ class API:
                         stress.force_calculate(particleList[i],particleList[j])
 
             for i in range(num_particle):
-                particleList[i].motion_equation()
+                if particleList[i].id not in cellworker.topLine:
+                    particleList[i].motion_equation()
 
 
-            # if (t+1) % move_every == 0:
-            #     # print("Toggle_move : {} toggle_direction : {} move: 1".format(toggle_move,toggle_direction))
-            #     for x in cellworker.topLine:
-            #         if toggle_direction:
-            #             print("Toggle_move : {} toggle_direction : {} move: 1".format(toggle_move,toggle_direction))
-            #             particleList[x]._move(1.5)
-            #         else:
-            #             print("Toggle_move : {} toggle_direction : {} move: -1".format(toggle_move,toggle_direction))
-            #             particleList[x]._move(-1.5)
-            #     toggle_move,toggle_direction = self.set_toggle(toggle_move,toggle_direction)
+
 
             if (t+1) % print_every == 0 or t==0:
                 d3_dic =list()
                 for particle in particleList:
-                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential});
+                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential,"spring":[ (particleList[t].x,particleList[t].y) for t in particle.spring_interacted ]});
                 d = json.dumps(d3_dic)
                 yield d
                 # requests.post("localhost:5000/run", data={'number': 12524, 'type': 'issue', 'action': 'show'})
 
                 #https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
-
-                if isCellList:
-                    graph.multi_plot(t+1,particleList,cellList)
-                else:
-                    graph.multi_plot(t+1,particleList)
+                if is_graph:
+                    if isCellList:
+                        graph.multi_plot(t+1,particleList,cellList)
+                    else:
+                        graph.multi_plot(t+1,particleList)
 
 
         elapsed_time = time.time() - start_time

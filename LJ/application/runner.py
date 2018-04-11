@@ -12,6 +12,7 @@ def main(runner_params):
 
     }
     GRAPHER_PARAMS = {
+        "is_graph" : True,
         "print_every" : runner_params["print_every"],
         "Dimension" : runner_params["Dimension"]
 
@@ -23,7 +24,13 @@ def main(runner_params):
         "r0": runner_params["r0"]
     }
 
-    api = API(SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM)
+    DISPLACEMENT_PARAMS = {
+        "move_after" : 500,
+        "move_every" : 20,
+        "displacement" : 1.5
+    }
+
+    api = API(SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS)
     for i in api.run():
         yield i
 

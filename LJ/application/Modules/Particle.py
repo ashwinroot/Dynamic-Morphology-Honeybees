@@ -21,6 +21,7 @@ class Particle:
         self.cell = None
         self.dt = 0.0005
         self.interacted = list()
+        self.spring_interacted = list()
 
     def motion_equation(self):
         #Equations of motion

@@ -8,6 +8,7 @@ class Stress:
         self.r0 = r0
 
     def force_calculate(self,A,B):
+        A.spring_interacted.append(B.id)
         distance = np.sqrt((A.x - B.x)**2 + (A.y - B.y)**2)
         r_vector = np.zeros([1, 2])
         diff = (distance - self.r0)

@@ -101,6 +101,7 @@ class CellUtils():
         # print("Reallocating particles")
         for particle in particleList:
             particle.interacted = list()
+            particle.spring_interacted = list()
             for i,cell in enumerate(cellList):
                 cell.already_interacted = False
                 # sys.stdout.write("\n {} : ({},{}) to ({},{})".format(cell.id,cell.x1,cell.y1,cell.x2,cell.y2))

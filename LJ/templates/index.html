@@ -39,7 +39,7 @@
   </div>
 
   <script>
-    var iteration = 0;
+    var iteration = -100;
     var increment_iter = {{iter_inc}};
     var dt = 0.0005;
   </script>
@@ -48,6 +48,7 @@
     // $("#data").text("{{d}}");
     var str = "{{d}}";
     var res = str.replace(/&#34;/g, "\"");
+    console.log(res);
     iteration = iteration + increment_iter;
     console.log("Iteration number : " + iteration);
     var parsed_res = JSON.parse(res)
@@ -130,13 +131,33 @@
           .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-        // Get the data
+            // Add the X Axis
+            svg.append("g")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
 
-        // format the data
-        // parsed_res.forEach(function(d) {
-        //     d.x = +d.x;
-        //     d.y = +d.y;
-        // });
+            // Add the Y Axis
+            svg.append("g")
+              .call(d3.axisLeft(y));
+
+
+            //add Title
+            svg.append("text")
+              .attr("x", (width + margin.left + margin.right) / 2)
+              .attr("y", 15)
+              .attr("class", "title")
+              .attr("text-anchor", "middle")
+              .style("font-size", "16px")
+              .attr("font-weight", "bold")
+              .text("Iteration: " + iteration + " Real world time : " + Math.round(iteration * dt * 100) / 100 + " seconds.");
+
+              var PotentialRange = d3.extent(parsed_res,function(d){
+                return d.z;
+              });
+            //legendSvg
+            updateColourScale(fooColors,PotentialRange);
+
+      
 
         // Scale the range of the data
         x.domain(d3.extent(parsed_res, function(d) {
@@ -162,7 +183,7 @@
         //     .attr("d", valueline);
 
         // Add the scatterplot
-        if (iteration != 0) { //TODO: transition
+        if (true) { //TODO: transition
           svg.selectAll("circle")
             .data(parsed_res)
             .enter().append("circle")
@@ -175,9 +196,19 @@
               return y(d.y);
             })
             .attr("fill", function(d) {
-              console.log("Potential at " + d.no + ": " + d.z);
+              // console.log("Potential at " + d.no + ": " + d.z);
               return fooColors(d.z);
             });
+
+          svg.selectAll("line")
+          .data(parsed_res)
+          .enter()
+          .append("line")
+          .style("stroke", "black")
+          .attr("x1", function(d){return x(d.x);})     // x position of the first end of the line
+          .attr("y1", function(d){return y(d.y);})      // y position of the first end of the line
+          .attr("x2", function(d){return x(d.spring[0][0]);})    // x position of the second end of the line
+          .attr("y2", function(d){return y(d.spring[0][1]);});
         } else {
           var scatterSize = 5;
           console.log("Reached 0 ");
@@ -221,31 +252,11 @@
               return y(d.y);
             });
         }
-        // Add the X Axis
-        svg.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
-
-        // Add the Y Axis
-        svg.append("g")
-          .call(d3.axisLeft(y));
 
 
-        //add Title
-        svg.append("text")
-          .attr("x", (width + margin.left + margin.right) / 2)
-          .attr("y", 15)
-          .attr("class", "title")
-          .attr("text-anchor", "middle")
-          .style("font-size", "16px")
-          .attr("font-weight", "bold")
-          .text("Iteration: " + iteration + " Real world time : " + Math.round(iteration * dt * 100) / 100 + " seconds.");
 
-          var PotentialRange = d3.extent(parsed_res,function(d){
-            return d.z;
-          });
-        //legendSvg
-        updateColourScale(fooColors,PotentialRange);
+
+
       }
     }
   </script>

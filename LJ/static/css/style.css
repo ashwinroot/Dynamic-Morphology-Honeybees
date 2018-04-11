@@ -19,3 +19,10 @@ body h1 {
     background: #D3D3D3;
     right: 0;
 }
+
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 0.5px;
+}

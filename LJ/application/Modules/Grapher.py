@@ -1,9 +1,22 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.lines as mlines
 import time
 import sys
 import os
 import pickle
+
+def newline(p1, p2):
+    ax = plt.gca()
+    xmin, xmax = ax.get_xbound()
+
+    if(p2[0] == p1[0]):
+        xmin = xmax = p1[0]
+        ymin, ymax = ax.get_ybound()
+    else:
+        ymax = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmax-p1[0])
+        ymin = p1[1]+(p2[1]-p1[1])/(p2[0]-p1[0])*(xmin-p1[0])
+
 
 class Grapher:
     def __init__(self,distance,iscellList=True):
@@ -40,6 +53,11 @@ class Grapher:
             plt.annotate(str(l),xy=(x[i],y[i]))
         cbar = plt.colorbar()
         cbar.set_label("Potential", labelpad=+1)
+
+        for particle in particleList:
+            for t in particle.spring_interacted:
+                l = mlines.Line2D([particle.x,particleList[t].x], [particle.y,particleList[t].y])
+                ax.add_line(l)
 
         #grids
         if showPatch and self.iscellList:

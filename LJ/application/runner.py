@@ -25,12 +25,17 @@ def main(runner_params):
     }
 
     DISPLACEMENT_PARAMS = {
-        "move_after" : 500,
-        "move_every" : 20,
-        "displacement" : 1.5
+        "move_after" : runner_params["moveafter"],
+        "move_every" : runner_params["moveevery"],
+        "displacement" : runner_params["movedisplacement"]
     }
 
-    api = API(SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS)
+    LJ_PARAMS = {
+        "epsilon" : runner_params["epsilon"],
+        "ljcutoff": runner_params["ljcutoff"]
+    }
+
+    api = API(SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS,LJ_PARAMS)
     for i in api.run():
         yield i
 

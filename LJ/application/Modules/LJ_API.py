@@ -18,11 +18,12 @@ from LJ.application.Modules.Grapher import Grapher
 from LJ.application.Modules.stress import Stress
 
 class API:
-    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS):
+    def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS,LJ_PARAMS):
         self.server_params =SERVER_PARAMS
         self.grapher_params = GRAPHER_PARAMS
         self.stress_params = STRESS_PARAM
         self.displacement_params = DISPLACEMENT_PARAMS
+        self.lj_params = LJ_PARAMS
 
     def init(self,n):
         particleList = []
@@ -79,10 +80,11 @@ class API:
 
 
         stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
-        lj = LJ(num_particle)
+        lj = LJ(self.lj_params['ljcutoff'],self.lj_params['epsilon'])
         particleList =self.init(num_particle) #list of particles
 
         graph = Grapher(distance,isCellList)
+
         if isCellList:
             cellworker = CellUtils(distance)
             cellList = cellworker.init_cells(particleList)
@@ -132,7 +134,7 @@ class API:
                         stress.force_calculate(particleList[i],particleList[j])
 
             for i in range(num_particle):
-                if particleList[i].id not in cellworker.topLine:
+                if particleList[i].id not in cellworker.topLine: #not moving the top line ## TODO: Ask Orit
                     particleList[i].motion_equation()
 
 
@@ -141,7 +143,7 @@ class API:
             if (t+1) % print_every == 0 or t==0:
                 d3_dic =list()
                 for particle in particleList:
-                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential,"spring":[ (particleList[t].x,particleList[t].y) for t in particle.spring_interacted ]});
+                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential,"spring":[ (particle.x,particle.y,particleList[t].x,particleList[t].y) for t in particle.spring_interacted ]});
                 d = json.dumps(d3_dic)
                 yield d
                 # requests.post("localhost:5000/run", data={'number': 12524, 'type': 'issue', 'action': 'show'})

@@ -10,7 +10,7 @@ import json
 def index():
     return render_template("index.html")
 
-
+#old version
 @app.route('/run', methods=['POST'])
 def get_run():
     if request.method == 'GET':
@@ -31,6 +31,7 @@ def stream_template(template_name, **context):
 
 @app.route('/submit',methods = ['GET','POST'])
 def submit():
+    # print(request.form["springDisplay"])
     run_params = {
         "time_end" : 3000 if request.form['time_end']=='' else int(request.form['time_end']),
         "dt" : 0.0005 if request.form['dt']=='' else float(request.form['dt']),
@@ -40,7 +41,13 @@ def submit():
         "print_every" : 100 if request.form['print_every']=='' else int(request.form['print_every']),
         "Dimension" :"2d",
         "k": 0.05 if request.form['k']=='' else float(request.form['k']),
-        "r0": 1.12 if request.form['r0']=='' else float(request.form['r0'])
+        "r0": 1.12 if request.form['r0']=='' else float(request.form['r0']),
+        "epsilon" : 5 if request.form['epsilon']=='' else float(request.form['epsilon']),
+        "ljcutoff" : 2.5 if request.form['ljcutoff']=='' else float(request.form['ljcutoff']), #might be same as the cell  size
+        "moveafter": 500 if request.form['moveafter']=='' else int(request.form['moveafter']),
+        "moveevery": 20 if request.form['moveevery']=='' else int(request.form['moveevery']),
+        "movedisplacement": 1.5 if request.form['movedisplacement']=='' else float(request.form['movedisplacement']),
+        # "viz_spring_force" : request.form["springDisplay"]
 
     }
     run_params["rc"] = run_params['r0'] * 1.2

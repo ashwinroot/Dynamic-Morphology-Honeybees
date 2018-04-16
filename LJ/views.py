@@ -31,7 +31,7 @@ def stream_template(template_name, **context):
 
 @app.route('/submit',methods = ['GET','POST'])
 def submit():
-    # print(request.form["springDisplay"])
+    print(request.form.get("springDisplay"))
     run_params = {
         "time_end" : 3000 if request.form['time_end']=='' else int(request.form['time_end']),
         "dt" : 0.0005 if request.form['dt']=='' else float(request.form['dt']),
@@ -47,7 +47,7 @@ def submit():
         "moveafter": 500 if request.form['moveafter']=='' else int(request.form['moveafter']),
         "moveevery": 20 if request.form['moveevery']=='' else int(request.form['moveevery']),
         "movedisplacement": 1.5 if request.form['movedisplacement']=='' else float(request.form['movedisplacement']),
-        # "viz_spring_force" : request.form["springDisplay"]
+        "spring_viz" : True if request.form.get("springDisplay")=='true' else False
 
     }
     run_params["rc"] = run_params['r0'] * 1.2
@@ -57,7 +57,7 @@ def submit():
 def run(run_params):
     # x = runner.main(run_params)
     # runner.main(run_params)
-    return Response(stream_template("index.html",data = runner.main(run_params),iter_inc = run_params["print_every"]))
+    return Response(stream_template("index.html",data = runner.main(run_params),iter_inc = run_params["print_every"],v_spring=run_params["spring_viz"]))
 
     # return Response(stream_with_context(runner.main(run_params)),mimetype='application/json')
     # return redirect('index.html')

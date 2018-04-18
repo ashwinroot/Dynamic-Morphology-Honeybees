@@ -45,7 +45,7 @@ class API:
             if (iteration+1) % self.move_every == 0:
                 # print("Toggle_move : {} toggle_direction : {} move: 1".format(toggle_move,toggle_direction))
                 for x in cellworker.topLine:
-                    if toggle_direction:
+                    if self.toggle_direction:
                         print("Toggle_move : {} toggle_direction : {} move: 1".format(self.toggle_move,self.toggle_direction))
                         particleList[x]._move(self.displacement)
                     else:
@@ -138,7 +138,7 @@ class API:
                     particleList[i].motion_equation()
 
 
-
+            self.send_details(t,particleList,cellworker)
 
             if (t+1) % print_every == 0 or t==0:
                 d3_dic =list()

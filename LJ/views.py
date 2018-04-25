@@ -77,7 +77,7 @@ def submit3d():
         "distance" :2.5,
         "cellList" : True,
         "print_every" : 100 if request.form['print_every']=='' else int(request.form['print_every']),
-        "Dimension" :"2d",
+        "Dimension" :"3d",
         "k": 0.05 if request.form['k']=='' else float(request.form['k']),
         "r0": 1.12 if request.form['r0']=='' else float(request.form['r0']),
         "epsilon" : 5 if request.form['epsilon']=='' else float(request.form['epsilon']),

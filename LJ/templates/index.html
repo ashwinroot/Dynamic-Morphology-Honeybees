@@ -62,7 +62,7 @@ var tip1 = d3.tip()
   .attr('class', 'd3-tip')
   .offset([100, 0])
   .html(function(d) {
-    return "<strong>X: </strong><span class='details'>" + d.x + "</span><br /><strong>Y: </strong><span class='details'>" + d.y + "</span><br /><strong>P: </strong><span class='details'>" + d.z + "</span>";
+    return "<strong>X: </strong><span class='details'>" + d.x + "</span><br /><strong>Y: </strong><span class='details'>" + d.y + "</span><br /><strong>P: </strong><span class='details'>" + d.p+ "</span>";
   });
 
     alert({{v_spring}});
@@ -133,7 +133,7 @@ var tip1 = d3.tip()
         var y = d3.scaleLinear().range([height, 0]);
         var fooColors =d3.scaleQuantile()
           .domain(d3.extent(parsed_res,function(d){
-            return d.z;
+            return d.p;
           }))
           .range(colors1);
         // var fooColors = d3.scaleLinear()
@@ -157,7 +157,7 @@ var tip1 = d3.tip()
 
 
               var PotentialRange = d3.extent(parsed_res,function(d){
-                return d.z;
+                return d.p;
               });
             //legendSvg
             updateColourScale(fooColors,PotentialRange);
@@ -202,7 +202,7 @@ var tip1 = d3.tip()
             })
             .attr("fill", function(d) {
               // console.log("Potential at " + d.no + ": " + d.z);
-              return fooColors(d.z);
+              return fooColors(d.p);
             })
             .on('mouseover', function(d) {
           tip1.show(d);
@@ -273,8 +273,8 @@ var tip1 = d3.tip()
 
                 })
                 .attr("fill", function(d) {
-                  console.log("Potential at " + d.no + ": " + d.z);
-                  return fooColors(d.z);
+                  console.log("Potential at " + d.no + ": " + d.p);
+                  return fooColors(d.p);
                 });
 
             });

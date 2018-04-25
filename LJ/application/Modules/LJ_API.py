@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 
 from LJ.application.Modules.Particle import Particle
+from LJ.application.Modules.Particle_3d import Particle3d
 from LJ.application.Modules.LJ import LJ
 from LJ.application.Modules.Cell import Cell
 from LJ.application.Modules.cellutils import CellUtils
@@ -19,6 +20,7 @@ from LJ.application.Modules.stress import Stress
 
 class API:
     def __init__(self,SERVER_PARAMS,GRAPHER_PARAMS,STRESS_PARAM,DISPLACEMENT_PARAMS,LJ_PARAMS):
+        print ("Dimension working on : " + str(GRAPHER_PARAMS["Dimension"]))
         self.server_params =SERVER_PARAMS
         self.grapher_params = GRAPHER_PARAMS
         self.stress_params = STRESS_PARAM
@@ -32,14 +34,25 @@ class API:
         initial_l = particles_per_edge * initial_min_step
         count =0
         print("dt" + str(self.server_params['dt']))
-
-        for i in range(0, int(math.sqrt(n))):  # 1 <= i <= n/2
-            for j in range(0, int(math.sqrt(n))):
-                x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
-                y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
-                particleList.append(Particle(count,False,x,y))
-                count+=1
-
+        if self.dimension=="2d":
+            print("[INFO] - Intializing 2d")
+            for i in range(0, int(math.sqrt(n))):  # 1 <= i <= n/2
+                for j in range(0, int(math.sqrt(n))):
+                    x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
+                    y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
+                    particleList.append(Particle(count,False,x,y))
+                    count+=1
+        elif self.dimension=="3d":
+            print("[INFO] - Intializing 3d")
+            cube_root =int(round(n ** (1. / 3)))
+            for k in range(0,cube_root):
+                for i in range(0, cube_root):  # 1 <= i <= n/2
+                    for j in range(0,cube_root):
+                        x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
+                        y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
+                        z = initial_min_step * k - (initial_l/2) + (initial_min_step / 2)
+                        particleList.append(Particle3d(count,False,x,y,z))
+                        count+=1
         # a = 0.1
         # if shape is not "square":
         #     for i,p in enumerate(particleList):
@@ -95,9 +108,10 @@ class API:
         self.displacement = self.displacement_params["displacement"]
         self.move_after = self.displacement_params["move_after"]
 
+        self.dimension = self.grapher_params["Dimension"]
 
         stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
-        lj = LJ(self.lj_params['ljcutoff'],self.lj_params['epsilon'])
+        lj = LJ(self.lj_params['ljcutoff'],self.lj_params['epsilon'],self.dimension)
         particleList,num_particle =self.init(num_particle,"parabola") #list of particles
 
         graph = Grapher(distance,isCellList)
@@ -129,7 +143,7 @@ class API:
                 cellworker.init_allocation(cellList=cellList,particleList=particleList)
             lj.set_force(particleList) #initially setting the net force to zero
 
-            if isCellList:
+            if not isCellList:
                 for i,cell in enumerate(cellList):
                     adjacent  = cell.getAdjacentParticles()
                     # sys.stdout.write("\n Cell id : {} Adjacent Particle count: {} ".format(cell.id,len(adjacent)))
@@ -145,22 +159,24 @@ class API:
                                     particlei.interacted.append(particlej.id)
                                     particlej.interacted.append(particlei.id)
             else:
+                print("[INFO] - Else")
                 for i in range (num_particle):
                     for j in range(i+1,num_particle):  #inefficient with o(n^3)
                         lj.force_calculate(particleList[i],particleList[j])
-                        stress.force_calculate(particleList[i],particleList[j])
+                        # stress.force_calculate(particleList[i],particleList[j])
 
             for i in range(num_particle):
                 if particleList[i].id not in cellworker.topLine:
                     particleList[i].motion_equation()
 
 
-            self.send_details(t,particleList,cellworker)
+            #Moving here and tehre
+            #self.send_details(t,particleList,cellworker)
 
             if (t+1) % print_every == 0 or t==0:
                 d3_dic =list()
                 for particle in particleList:
-                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential,"spring":[ (particle.x,particle.y,particleList[_t].x,particleList[_t].y) for _t in particle.spring_interacted ]});
+                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.z,"p":particle.potential,"spring":[ (particle.x,particle.y,particleList[_t].x,particleList[_t].y) for _t in particle.spring_interacted ]});
                 d = json.dumps(d3_dic)
                 yield d
                 # requests.post("localhost:5000/run", data={'number': 12524, 'type': 'issue', 'action': 'show'})

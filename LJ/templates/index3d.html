@@ -17,6 +17,7 @@
   <script src="/static/js/script.js"></script>
   <script src="/static/js/d3-tip.js"></script>
   <script src="/static/js/d3-x3dom-axis.min.js"></script>
+  <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.5/d3-legend.js"></script>
   <script type="text/javascript" src="http://x3dom.org/x3dom/dist/x3dom-full.js"></script>
@@ -89,80 +90,191 @@ var tip1 = d3.tip()
    // scatterPlot3d(parsed_res, d3.select('#plot'));
     // $("#data").text(JSON.parse(res));
     // console.log(parsed_res[0]);
-    scatterPlot3d();
+    scatterPlot3d(parsed_res);
 
-    function scatterPlot3d()
+    function scatterPlot3d(parsed_res)
     {
+      $("#plot").empty();
 
-    var makeSolid =  function(selection, color) {
-      selection.append("appearance").append("material").attr("diffuseColor", color || 	"black");
-      return selection;
+
+      var margin = {
+          top: 50,
+          right: 260,
+          bottom: 30,
+          left: 50
+        },
+        width = 1000 - margin.left - margin.right,
+        height = 770 - margin.top - margin.bottom;
+
+
+      var svg = d3.select("#plot").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+      var origin = [480, 300], j = 10, scale = 20, scatter = [], yLine = [], xGrid = [], beta = 0, alpha = 0, key = function(d){ return d.id; }, startAngle = (Math.PI/2-10);
+    svg    = svg.call(d3.drag().on('drag', dragged).on('start', dragStart).on('end', dragEnd)).append('g');
+    var color  = d3.scaleOrdinal(d3.schemeCategory20);
+    var mx, my, mouseX, mouseY;
+
+    var grid3d = d3._3d()
+        .shape('GRID', 20)
+        .origin(origin)
+        .rotateY( startAngle)
+        .rotateX(-startAngle)
+        .scale(scale);
+
+    var point3d = d3._3d()
+        .x(function(d){ return d.x; })
+        .y(function(d){ return d.y; })
+        .z(function(d){ return 0; })
+        .origin(origin)
+        .rotateY( startAngle)
+        .rotateX(-startAngle)
+        .scale(scale);
+
+    var yScale3d = d3._3d()
+        .shape('LINE_STRIP')
+        .origin(origin)
+        .rotateY( startAngle)
+        .rotateX(-startAngle)
+        .scale(scale);
+
+    function processData(data, tt){
+
+        /* ----------- GRID ----------- */
+
+        var xGrid = svg.selectAll('path.grid').data(data[0], key);
+
+        xGrid
+            .enter()
+            .append('path')
+            .attr('class', '_3d grid')
+            .merge(xGrid)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 0.3)
+            // .attr('fill', function(d){ return d.ccw ? 'lightgrey' : '#717171'; })
+            .attr('fill-opacity', 0.0)
+            .attr('d', grid3d.draw);
+
+        xGrid.exit().remove();
+
+        /* ----------- POINTS ----------- */
+
+        var points = svg.selectAll('circle').data(data[1], key);
+
+        points
+            .enter()
+            .append('circle')
+            .attr('class', '_3d')
+            .attr('opacity', 0)
+            .attr('cx', posPointX)
+            .attr('cy', posPointY)
+            .merge(points)
+            .transition().duration(tt)
+            .attr('r', 3)
+            .attr('stroke', function(d){ return d3.color(color(d.id)).darker(3); })
+            .attr('fill', function(d){ return color(d.id); })
+            .attr('opacity', 1)
+            .attr('cx', posPointX)
+            .attr('cy', posPointY);
+
+        points.exit().remove();
+
+        /* ----------- y-Scale ----------- */
+
+        var yScale = svg.selectAll('path.yScale').data(data[2]);
+
+        yScale
+            .enter()
+            .append('path')
+            .attr('class', '_3d yScale')
+            .merge(yScale)
+            .attr('stroke', 'black')
+            .attr('stroke-width', .5)
+            .attr('d', yScale3d.draw);
+
+        yScale.exit().remove();
+
+         /* ----------- y-Scale Text ----------- */
+
+        var yText = svg.selectAll('text.yText').data(data[2][0]);
+
+        yText
+            .enter()
+            .append('text')
+            .attr('class', '_3d yText')
+            .attr('dx', '.3em')
+            .merge(yText)
+            .each(function(d){
+                d.centroid = {x: d.rotated.x, y: d.rotated.y, z: d.rotated.z};
+            })
+            .attr('x', function(d){ return d.projected.x; })
+            .attr('y', function(d){ return d.projected.y; })
+            .text(function(d){ return d[1] <= 0 ? d[1] : ''; });
+
+        yText.exit().remove();
+
+        d3.selectAll('._3d').sort(d3._3d().sort);
     }
 
-    var width = 800, height = 400;
-    $("#plot").empty();
-    var x3d = d3.select("#plot").append("x3d")
-      .attr("width", width + 'px')
-      .attr("height", height +'px' );
-    d3.select('.x3dom-canvas')
-      .attr("width", 2 * width)
-      .attr("height", 2 *  height);
+    function posPointX(d){
+        return d.projected.x;
+    }
 
+    function posPointY(d){
+        return d.projected.y;
+    }
 
-    var x = d3.scaleLinear().range([0, 40]);
-    var y = d3.scaleLinear().domain([0, 4]).range([0, 40]);
-    var z = d3.scaleLinear().range([0, 40]);
-    var xAxis = d3_x3dom_axis.x3domAxis('x', 'z', x).tickSize(z.range()[1] - z.range()[0]).tickPadding(y.range()[0]);;
-    var yAxis = d3_x3dom_axis.x3domAxis('y', 'z', y).tickSize(z.range()[1] - z.range()[0]);
-    var yAxis2 = d3_x3dom_axis.x3domAxis('y', 'x', y).tickSize(x.range()[1] - x.range()[0]).tickFormat(function(d){return ''});
-    var zAxis = d3_x3dom_axis.x3domAxis('z', 'x', y).tickSize(x.range()[1] - x.range()[0]);
+	function init(){
+        var cnt = 0;
+        xGrid = [], scatter = [], yLine = [];
+        for(var z = -j; z < j; z++){
+            for(var x = -j; x < j; x++){
+                xGrid.push([x, 1, z]);
+                scatter.push({x: x, y: d3.randomUniform(0, -10)(), z: z, id: 'point_' + cnt++});
+            }
+        }
 
+        d3.range(-1, 11, 1).forEach(function(d){ yLine.push([-j, -d, -j]); });
 
-    var scene = x3d.append("scene");
-    var view_pos = [80, 25, 80];
-    var fov = 0.8;
-    var view_or = [0, 1, 0, 0.8];
-    scene.append("viewpoint")
-      .attr("position", view_pos.join(" "))
-      .attr("orientation", view_or.join(" "))
-      .attr("fieldOfView", fov);
+        var data = [
+            grid3d(xGrid),
+            point3d(parsed_res),
+            yScale3d([yLine])
+        ];
+        processData(data, 1000);
+    }
 
-    scene.append('group')
-      .attr('class', 'xAxis')
-      .call(xAxis)
-      .select('.domain').call(makeSolid, 'blue');
-    scene.append('group')
-      .attr('class', 'yAxis')
-      .call(yAxis)
-      .select('.domain').call(makeSolid, 'red');
-    scene.append('group')
-      .attr('class', 'yAxis')
-      .call(yAxis2)
-      .select('.domain').call(makeSolid, 'red');
-    scene.append('group')
-      .attr('class', 'zAxis')
-      .call(zAxis)
-      .select('.domain');
+    function dragStart(){
+        mx = d3.event.x;
+        my = d3.event.y;
+    }
 
-    var n = 40;
-    var points = d3.range(n).map(function(d) {
-      var p = {};
-      p.x = Math.random();
-      p.z = Math.random();
-      p.y = 2 * p.x + p.z + Math.random();
-      return p;
-    })
+    function dragged(){
+        mouseX = mouseX || 0;
+        mouseY = mouseY || 0;
+        beta   = (d3.event.x - mx + mouseX) * Math.PI / 230 ;
+        alpha  = (d3.event.y - my + mouseY) * Math.PI / 230  * (-1);
+        console.log("Beta:"+beta+startAngle);
+        var data = [
+             grid3d.rotateY(beta + startAngle).rotateX(alpha - startAngle)(xGrid),
+            point3d.rotateY(beta + startAngle).rotateX(alpha - startAngle)(parsed_res),
+            yScale3d.rotateY(beta + startAngle).rotateX(alpha - startAngle)([yLine]),
+        ];
+        processData(data, 0);
+    }
 
-    scene.selectAll('.point')
-      .data(points)
-      .enter()
-      .append('transform')
-      .attr('class', 'point')
-      .attr('translation', function(d){ return x(d.x) + ' ' + y(d.y) + ' ' + z(d.z)})
-      .append('shape')
-      .call(makeSolid, 'red')
-      .append('sphere')
-      .attr('radius', 0.5);
+    function dragEnd(){
+        mouseX = d3.event.x - mx + mouseX;
+        mouseY = d3.event.y - my + mouseY;
+    }
+
+    d3.selectAll('button').on('click', init);
+
+    init();
 }
 
 

@@ -5,6 +5,7 @@ import time
 import sys
 import os
 import pickle
+import numpy as np
 
 def newline(p1, p2):
     ax = plt.gca()
@@ -35,6 +36,11 @@ class Grapher:
 
         x ,y,a ,label= [] , [] , [],[]
 
+        _width = 2
+        narrow = 1/_width
+        h = np.linspace(-6, 6, 1000)
+        t = narrow* (h**2)
+
         for count,p in enumerate(particleList):
             x.append(p.x)
             y.append(p.y)
@@ -48,6 +54,7 @@ class Grapher:
         fig = plt.figure()
         plt.title("Plotting "+str(n_iter))
         ax = plt.gca()
+        ax.plot(h,t)
         plt.scatter(x,y,c=a)
         for i,l in enumerate(label):
             plt.annotate(str(l),xy=(x[i],y[i]))
@@ -70,11 +77,22 @@ class Grapher:
                     fill=False      ))# remove background
                 plt.text(cell.x1-0.02*self.distance,cell.y1+0.02*self.distance,cell.id)
 
-        # plt.xlim((b_x1-0.5,b_x2+0.5))
-        # plt.ylim((b_y1-0.5,b_y2+0.5))
+        plt.xlim((-7,7))
+        plt.ylim((-7,7))
 
         fig.savefig(self.save_path+"/"+str(n_iter)+'.jpg')
         plt.close()
 
         tic2 = time.time()
         self.graph_time += tic2 - tic1
+
+
+        #TODO:
+#         import imageio
+# import glob
+#
+# writer = imageio.get_writer('video.mp4', fps=0.2)
+# for fname in glob.glob('images/*.jpg'):
+#      img = imread(fname)
+#     writer.append_data(img)
+# writer.close()

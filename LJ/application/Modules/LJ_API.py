@@ -25,20 +25,37 @@ class API:
         self.displacement_params = DISPLACEMENT_PARAMS
         self.lj_params = LJ_PARAMS
 
-    def init(self,n):
+    def init(self,n,shape="square"):
         particleList = []
         particles_per_edge = np.ceil(np.sqrt(n))
         initial_min_step = 1.2 * 1.122
         initial_l = particles_per_edge * initial_min_step
         count =0
         print("dt" + str(self.server_params['dt']))
+
         for i in range(0, int(math.sqrt(n))):  # 1 <= i <= n/2
             for j in range(0, int(math.sqrt(n))):
                 x = initial_min_step * i - (initial_l/2) + (initial_min_step/2)
                 y = initial_min_step * j - (initial_l/2) + (initial_min_step / 2)
                 particleList.append(Particle(count,False,x,y))
                 count+=1
-        return particleList
+
+        # a = 0.1
+        # if shape is not "square":
+        #     for i,p in enumerate(particleList):
+        #         if (a*p.y**p.y) - p.x > 0:
+        #             del particleList[i]
+        #             n = n -1
+
+        # pos_x = np.arange(-7,7,0.5)
+        # a = 1
+        # if shape is not "square":
+        #     while count!=n:
+        #         x = pos_x[random.randint(0,len(pos_x)-1)]
+        #         y = a*(x**x)
+        #         particleList.append(Particle(count,False,x,y))
+        #         count+=1
+        return particleList,n
 
     def send_details(self,iteration,particleList,cellworker):
         if (iteration+1)>= self.move_after:
@@ -81,7 +98,7 @@ class API:
 
         stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
         lj = LJ(self.lj_params['ljcutoff'],self.lj_params['epsilon'])
-        particleList =self.init(num_particle) #list of particles
+        particleList,num_particle =self.init(num_particle,"parabola") #list of particles
 
         graph = Grapher(distance,isCellList)
 
@@ -134,7 +151,7 @@ class API:
                         stress.force_calculate(particleList[i],particleList[j])
 
             for i in range(num_particle):
-                if particleList[i].id not in cellworker.topLine: #not moving the top line ## TODO: Ask Orit
+                if particleList[i].id not in cellworker.topLine:
                     particleList[i].motion_equation()
 
 
@@ -143,7 +160,7 @@ class API:
             if (t+1) % print_every == 0 or t==0:
                 d3_dic =list()
                 for particle in particleList:
-                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential,"spring":[ (particle.x,particle.y,particleList[t].x,particleList[t].y) for t in particle.spring_interacted ]});
+                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.potential,"spring":[ (particle.x,particle.y,particleList[_t].x,particleList[_t].y) for _t in particle.spring_interacted ]});
                 d = json.dumps(d3_dic)
                 yield d
                 # requests.post("localhost:5000/run", data={'number': 12524, 'type': 'issue', 'action': 'show'})

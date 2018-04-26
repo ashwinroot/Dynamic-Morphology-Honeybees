@@ -53,6 +53,7 @@ class API:
                         z = initial_min_step * k - (initial_l/2) + (initial_min_step / 2)
                         particleList.append(Particle3d(count,False,x,y,z))
                         count+=1
+            print("For Particle of zero the z"+str(particleList[0].z)+"force shape"+str(np.shape(particleList[0].force)))
         # a = 0.1
         # if shape is not "square":
         #     for i,p in enumerate(particleList):
@@ -141,7 +142,7 @@ class API:
             sys.stdout.flush()
             if isCellList:
                 cellworker.init_allocation(cellList=cellList,particleList=particleList)
-            lj.set_force(particleList) #initially setting the net force to zero
+            # lj.set_force(particleList) #initially setting the net force to zero
 
             if not isCellList:
                 for i,cell in enumerate(cellList):
@@ -159,9 +160,10 @@ class API:
                                     particlei.interacted.append(particlej.id)
                                     particlej.interacted.append(particlei.id)
             else:
-                print("[INFO] - Else")
+                # print("[INFO] - Else")
                 for i in range (num_particle):
                     for j in range(i+1,num_particle):  #inefficient with o(n^3)
+                        # print("Interacting particle A: "+str(np.shape(particleList[i].force)))
                         lj.force_calculate(particleList[i],particleList[j])
                         # stress.force_calculate(particleList[i],particleList[j])
 

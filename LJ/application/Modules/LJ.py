@@ -70,7 +70,10 @@ class LJ:
 
     def set_force(self,particleList):
         for x in particleList:
-            x.force = np.zeros([1,2])
+            if self.dimension=="2d":
+                x.force = np.zeros([1,2])
+            else:
+                x.force = np.zeros([1,3])
             x.potential = 0
 
     def getAdjList(self,distance):

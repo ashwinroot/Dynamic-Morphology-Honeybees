@@ -114,7 +114,7 @@ var tip1 = d3.tip()
         .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-      var origin = [480, 300], j = 10, scale = 20, scatter = [], yLine = [], xGrid = [], beta = 0, alpha = 0, key = function(d){ return d.id; }, startAngle = (Math.PI/2-10);
+      var origin = [480, 300], j = 10, scale = 20, scatter = [], yLine = [], xGrid = [], beta = 0, alpha = 0, key = function(d){ return d.id; }, startAngle = (Math.PI/4-10);
     svg    = svg.call(d3.drag().on('drag', dragged).on('start', dragStart).on('end', dragEnd)).append('g');
     var color  = d3.scaleOrdinal(d3.schemeCategory20);
     var mx, my, mouseX, mouseY;
@@ -169,11 +169,11 @@ var tip1 = d3.tip()
             .enter()
             .append('circle')
             .attr('class', '_3d')
-            .attr('opacity', 0)
-            .attr('cx', posPointX)
-            .attr('cy', posPointY)
-            .merge(points)
-            .transition().duration(tt)
+            // .attr('opacity', 0)
+            // .attr('cx', posPointX)
+            // .attr('cy', posPointY)
+            // .merge(points)
+            // .transition().duration(tt)
             .attr('r', 3)
             .attr('stroke', function(d){ return d3.color(color(d.id)).darker(3); })
             .attr('fill', function(d){ return color(d.id); })

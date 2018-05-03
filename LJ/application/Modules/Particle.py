@@ -4,7 +4,7 @@ import sys
 import numpy as np
 
 class Particle:
-    def __init__(self,id,isRan=True,x=0,y=0,dt=0.0005, num_particle=100):
+    def __init__(self,id,isRan=True,x=0,y=0,dt=0.00005, num_particle=100):
         self.id = id
         self.lattice = {"size" :math.sqrt(num_particle)+2.5,"half":num_particle/2}
         if isRan:
@@ -19,7 +19,7 @@ class Particle:
         self.force = np.zeros([1,2])
         self.potential = 0
         self.cell = None
-        self.dt = 0.0005
+        self.dt = dt
         self.interacted = list()
         self.spring_interacted = list()
 

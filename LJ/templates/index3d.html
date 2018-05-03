@@ -92,6 +92,36 @@ var tip1 = d3.tip()
     // console.log(parsed_res[0]);
     scatterPlot3d(parsed_res);
 
+
+    function updateColourScale(colorScale,domain) {
+      // var linear = d3.scaleLinear()
+      //   .domain(domain)
+      //     .range(colorScale);
+
+      var svg = d3.select("svg");
+      svg.call(tip1);
+      var legend = d3.legendColor()
+        .labelFormat(d3.format(".2f"))
+        // .useClass(true)
+        .title("Potential of every particle")
+        .titleWidth(100)
+        .scale(colorScale);
+
+      svg.append("g")
+        .attr("class", "legendLinear")
+        .attr("transform", "translate(780,300)");
+
+      // var legendLinear = d3.legendColor()
+      //   .shapeWidth(30)
+      //   .cells(10)
+      //   .orient('vertical')
+      //   .scale(color);
+
+      svg.select(".legendLinear")
+        .call(legend);
+
+    }
+
     function scatterPlot3d(parsed_res)
     {
       $("#plot").empty();
@@ -114,10 +144,16 @@ var tip1 = d3.tip()
         .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-      var origin = [480, 300], j = 10, scale = 20, scatter = [], yLine = [], xGrid = [], beta = 0, alpha = 0, key = function(d){ return d.id; }, startAngle = (Math.PI/4-10);
+      var origin = [480, 300], j = 10, scale = 20, scatter = [], yLine = [], xGrid = [], beta = 0, alpha = 0, key = function(d){ return d.id; }, startAngle = (2*Math.PI/3);
     svg    = svg.call(d3.drag().on('drag', dragged).on('start', dragStart).on('end', dragEnd)).append('g');
     var color  = d3.scaleOrdinal(d3.schemeCategory20);
     var mx, my, mouseX, mouseY;
+      colors1 = ["#f4c8c8","#eda3a3","#e47373","#e05d5d", "#dc4848","#d83333"]
+    var fooColors =d3.scaleQuantile()
+      .domain(d3.extent(parsed_res,function(d){
+        return d.p;
+      }))
+      .range(colors1);
 
     var grid3d = d3._3d()
         .shape('GRID', 20)
@@ -175,11 +211,19 @@ var tip1 = d3.tip()
             // .merge(points)
             // .transition().duration(tt)
             .attr('r', 3)
-            .attr('stroke', function(d){ return d3.color(color(d.id)).darker(3); })
-            .attr('fill', function(d){ return color(d.id); })
+            .attr('stroke', function(d){ return fooColors(d.p); })
+            .attr('fill', function(d){ return fooColors(d.p); })
             .attr('opacity', 1)
             .attr('cx', posPointX)
             .attr('cy', posPointY);
+
+
+            var PotentialRange = d3.extent(parsed_res,function(d){
+              return d.p;
+            });
+          //legendSvg
+          updateColourScale(fooColors,PotentialRange);
+
 
         points.exit().remove();
 

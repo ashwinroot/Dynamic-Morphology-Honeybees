@@ -72,7 +72,7 @@ def submit3d():
     print(request.form.get("springDisplay"))
     run_params = {
         "time_end" : 3000 if request.form['time_end']=='' else int(request.form['time_end']),
-        "dt" : 0.0005 if request.form['dt']=='' else float(request.form['dt']),
+        "dt" : 0.000005 if request.form['dt']=='' else float(request.form['dt']),
         "num_particles": 100 if request.form['num_particle']=='' else int(request.form['num_particle']),
         "distance" :2.5,
         "cellList" : True,

@@ -111,7 +111,7 @@ class API:
 
         self.dimension = self.grapher_params["Dimension"]
 
-        stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"])
+        stress = Stress(self.stress_params['k'],self.stress_params["rc"],self.stress_params["r0"],self.dimension)
         lj = LJ(self.lj_params['ljcutoff'],self.lj_params['epsilon'],self.dimension)
         particleList,num_particle =self.init(num_particle,"parabola") #list of particles
 
@@ -144,7 +144,7 @@ class API:
                 cellworker.init_allocation(cellList=cellList,particleList=particleList)
             # lj.set_force(particleList) #initially setting the net force to zero
 
-            if not isCellList:
+            if self.dimension=="2d":
                 for i,cell in enumerate(cellList):
                     adjacent  = cell.getAdjacentParticles()
                     # sys.stdout.write("\n Cell id : {} Adjacent Particle count: {} ".format(cell.id,len(adjacent)))
@@ -166,6 +166,7 @@ class API:
                         # print("Interacting particle A: "+str(np.shape(particleList[i].force)))
                         lj.force_calculate(particleList[i],particleList[j])
                         # stress.force_calculate(particleList[i],particleList[j])
+                        # stress.force_calculate(particleList[i],particleList[j])
 
             for i in range(num_particle):
                 if particleList[i].id not in cellworker.topLine:
@@ -173,18 +174,26 @@ class API:
 
 
             #Moving here and tehre
-            #self.send_details(t,particleList,cellworker)
 
-            if (t+1) % print_every == 0 or t==0:
-                d3_dic =list()
-                for particle in particleList:
-                    d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.z,"p":particle.potential,"spring":[ (particle.x,particle.y,particleList[_t].x,particleList[_t].y) for _t in particle.spring_interacted ]});
-                d = json.dumps(d3_dic)
-                yield d
+
+            if self.dimension=="3d":
+                if (t+1) % print_every == 0 or t==0:
+                    d3_dic =list()
+                    for particle in particleList:
+                        d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"z":particle.z,"p":particle.potential,"spring":[ (particle.x,particle.y,particleList[_t].x,particleList[_t].y) for _t in particle.spring_interacted ]});
+                    d = json.dumps(d3_dic)
+                    yield d
+            else:
+                self.send_details(t,particleList,cellworker)
+                if (t+1) % print_every == 0 or t==0:
+                    d3_dic =list()
+                    for particle in particleList:
+                        d3_dic.append({"no":particle.id,"x":particle.x,"y":particle.y,"p":particle.potential,"spring":[ (particle.x,particle.y,particleList[_t].x,particleList[_t].y) for _t in particle.spring_interacted ]});
+                    d = json.dumps(d3_dic)
+                    yield d
                 # requests.post("localhost:5000/run", data={'number': 12524, 'type': 'issue', 'action': 'show'})
 
-                #https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
-                if is_graph:
+                if is_graph and (t+1)% print_every == 0:
                     if isCellList:
                         graph.multi_plot(t+1,particleList,cellList)
                     else:

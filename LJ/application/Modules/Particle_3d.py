@@ -21,7 +21,7 @@ class Particle3d:
         self.force = np.zeros([1,3])
         self.potential = 0
         self.cell = None
-        self.dt = 0.0005
+        self.dt = 0.00005
         self.interacted = list()
         self.spring_interacted = list()
 

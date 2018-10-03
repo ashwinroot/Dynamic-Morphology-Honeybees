@@ -4,11 +4,14 @@
 
 <p> Working on molecular dynamics modelling, and currently working on optimising methodocology to create molecular dynamics api for future work. </p>
 
+
 To Do:
-<li>~~Add more features and time analyser~~</li>
-<li>~~Optimisation using cell List~~</li>
-<li>~~Visualisation using d3.js~~</li>
-<li>~~Optimising visualisation~~</li>
+- ~~Add more features and time analyser~~
+- ~~Optimisation using cell List~~
+- ~~Visualisation using d3.js~~
+- ~~Optimising visualisation~~
 
 
-Youtube link : (link)[https://www.youtube.com/watch?v=hV5hgsrHeqc]
+Youtube link : link [https://www.youtube.com/watch?v=hV5hgsrHeqc]
+
+
